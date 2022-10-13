@@ -10,10 +10,10 @@ using Microsoft.TeamFoundation.Common.Internal;
 using Topshelf.Runtime.Windows;
 namespace WindowSearcher
 {
-    public partial class Form1 : Form
+    public partial class Search : Form
     {
         public Dictionary<IntPtr, string> WindowList;
-        public Form1()
+        public Search()
         {
             InitializeComponent();
         }
@@ -227,7 +227,7 @@ namespace WindowSearcher
                 Debug.WriteLine("Global hotkey pressed");
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
-                Form1.SetForegroundWindow(Handle);
+                Search.SetForegroundWindow(Handle);
 
                 WindowListBox.Items.Clear();
                 Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
@@ -264,8 +264,16 @@ namespace WindowSearcher
             {
                 return;
             }
+            string window_name;
+            if (WindowListBox.SelectedItems[0].ToString() == "")
+            {
+                return;
+            }
+            
+            
+            window_name = WindowListBox.SelectedItems[0].ToString();
+            
 
-            string window_name = WindowListBox.SelectedItems[0].ToString();
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in windows)
             {

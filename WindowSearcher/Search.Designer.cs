@@ -1,6 +1,6 @@
 ﻿namespace WindowSearcher
 {
-    partial class Form1
+    partial class Search
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Search));
             this.SearchTextBox = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.TaskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -100,7 +100,7 @@
             this.WindowListBox.TabIndex = 1;
             this.WindowListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindowListBox_MouseDoubleClick_1);
             // 
-            // Form1
+            // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -111,7 +111,7 @@
             this.KeyPreview = true;
             this.MaximumSize = new System.Drawing.Size(715, 358);
             this.MinimumSize = new System.Drawing.Size(715, 48);
-            this.Name = "Form1";
+            this.Name = "Search";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.TaskBarMenu.ResumeLayout(false);
