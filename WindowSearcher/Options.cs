@@ -27,7 +27,11 @@ namespace WindowSearcher
         {
             Properties.Settings.Default["LaunchOnStartup"] = LaunchOnStartupCheckbox.Checked;
             Properties.Settings.Default["ConsiderFullScreen"] = ConsiderFullScreenCheckBox.Checked;
-            Properties.Settings.Default["HideSearchWithEscape"] = HideSearchWithEscapeCheckbox.Checked;
+
+            
+            Properties.Settings.Default["HideSearchWithEscape"] = HideWithEscRadioButton.Checked;
+            
+
             Properties.Settings.Default["HideOnFocusLost"] = HideOnFocusLostCheckbox.Checked;
 
             uint hotKey = (uint)Properties.Settings.Default["HotKey"];
@@ -50,14 +54,42 @@ namespace WindowSearcher
             //Properties.Settings.Default["OpenSearchHotkey"] = HotKeyTextBox.Text;
 
             Properties.Settings.Default.Save();
+
+            if (Properties.Settings.Default["LaunchOnStartup"].ToString().Equals("True"))
+            {
+                // add to startup
+                Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                key.SetValue("WindowFinder", Application.ExecutablePath.ToString());
+            }
+            else
+            {
+                // remove from startup
+                Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                key.DeleteValue("WindowFinder", false);
+            }
+
             MessageBox.Show("Settings saved! Please restart the application for changes to take effect.");
+
         }
 
         private void Options_Load(object sender, EventArgs e)
         {
             LaunchOnStartupCheckbox.Checked = (bool)Properties.Settings.Default["LaunchOnStartup"];
             ConsiderFullScreenCheckBox.Checked = (bool)Properties.Settings.Default["ConsiderFullScreen"];
-            HideSearchWithEscapeCheckbox.Checked = (bool)Properties.Settings.Default["HideSearchWithEscape"];
+
+            // select radiobutton depending on what is saved in settings
+            var hideOnESC = (bool)Properties.Settings.Default["HideSearchWithEscape"];
+            if (hideOnESC)
+            {
+                HideWithEscRadioButton.Checked = true;
+                ClearWithEscapeRadioButton.Checked = false;
+            } else
+            {
+                HideWithEscRadioButton.Checked = false;
+                ClearWithEscapeRadioButton.Checked = true;
+            }
+
+            //HideSearchWithEscapeCheckbox.Checked = (bool)Properties.Settings.Default["HideSearchWithEscape"];
             HideOnFocusLostCheckbox.Checked = (bool)Properties.Settings.Default["HideOnFocusLost"];
             var converter = new KeysConverter();
 
@@ -70,11 +102,6 @@ namespace WindowSearcher
             Keys hotKeyKey = (Keys)hotKey;
             
             HotKeyTextBox.Text = (KeyModifier)mod + " + " + converter.ConvertToString(hotKeyKey);
-
-            String hotKeyTip = "You can open this Options screen with CTRL+O/nwhile you are using the Search!";
-
-            String cantCloseWarning = "If you disable both options for hiding the Search you will not be able to close it without using the Task Manager!";
-
         }
 
         private void button1_Click(object sender, EventArgs e)

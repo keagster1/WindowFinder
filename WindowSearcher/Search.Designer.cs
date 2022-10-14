@@ -105,7 +105,7 @@
             this.WindowListBox.ItemHeight = 20;
             this.WindowListBox.Location = new System.Drawing.Point(0, 49);
             this.WindowListBox.MaximumSize = new System.Drawing.Size(715, 358);
-            this.WindowListBox.MinimumSize = new System.Drawing.Size(715, 48);
+            this.WindowListBox.MinimumSize = new System.Drawing.Size(715, 0);
             this.WindowListBox.Name = "WindowListBox";
             this.WindowListBox.Size = new System.Drawing.Size(715, 304);
             this.WindowListBox.TabIndex = 1;

@@ -10,6 +10,10 @@ using Microsoft.TeamFoundation.Common.Internal;
 using Topshelf.Runtime.Windows;
 using System.Windows.Input;
 
+// TODO: Implement the rest of the settings
+// TODO: Clean up inused variables
+// TODO: Refactor like a mofo
+
 namespace WindowSearcher
 {
     public partial class Search : Form
@@ -83,12 +87,36 @@ namespace WindowSearcher
                         MoveSelectedIndex(false);
                         break;
                     case Keys.Escape:
-                        this.Hide();
+                        if ((bool)Properties.Settings.Default["HideSearchWithEscape"])
+                        {
+                            this.Hide();
+                        }
+                        else
+                        {
+                            SearchTextBox.Text = "";
+                            ResetWindowList();
+                            // resize listbox to fit 10 items
+                            Resize();
+                            return true;
+                        }
                         break;
                     case Keys.Enter:
 
                         // get list of open windows
                         Dictionary<IntPtr, string> WindowList = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
+                        Debug.WriteLine(SearchTextBox.Text);
+                        if (SearchTextBox.Text.Trim().StartsWith("/"))
+                        {
+                            if (SearchTextBox.Text.Trim().Equals("/options")) {
+                                Options o = new Options();
+                                o.ShowDialog();
+                                break;
+                            } else if(SearchTextBox.Text.Trim().Equals("/exit"))
+                            {
+                                Application.Exit();
+                                break;
+                            }
+                        }
 
                         // find handle for text
                         foreach (KeyValuePair<IntPtr, string> window in WindowList)
@@ -190,6 +218,34 @@ namespace WindowSearcher
                 return;
             }
 
+            ResetWindowList();
+            // resize listbox to fit 10 items
+            Resize();
+        }
+
+        public bool ListViewContainsString(ListView lv, string s)
+        {
+            foreach (ListViewItem lvi in lv.Items)
+            {
+                if (lvi.Text.Contains(s))
+                    return true;
+            }
+            return false;
+        }
+
+        public void Resize()
+        {
+            WindowListBox.Size = new Size(WindowListBox.Size.Width, WindowListBox.Items.Count * 30);
+            this.Size = new Size(this.Size.Width, WindowListBox.Size.Height + 50);
+        }
+
+        private void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+        private void ResetWindowList()
+        {
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             // loop over all windows
             foreach (KeyValuePair<IntPtr, string> window in windows)
@@ -216,30 +272,8 @@ namespace WindowSearcher
                 }
 
             }
-            // resize listbox to fit 10 items
-            Resize();
         }
 
-        public bool ListViewContainsString(ListView lv, string s)
-        {
-            foreach (ListViewItem lvi in lv.Items)
-            {
-                if (lvi.Text.Contains(s))
-                    return true;
-            }
-            return false;
-        }
-
-        public void Resize()
-        {
-            WindowListBox.Size = new Size(WindowListBox.Size.Width, WindowListBox.Items.Count * 30);
-            this.Size = new Size(this.Size.Width, WindowListBox.Size.Height + 50);
-        }
-
-        private void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-
-        }
         public string ToHex(int value)
         {
             return String.Format("0x{0:X}", value);

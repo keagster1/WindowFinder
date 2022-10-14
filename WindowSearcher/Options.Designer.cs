@@ -32,11 +32,12 @@
             this.HotKeyTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ConsiderFullScreenCheckBox = new System.Windows.Forms.CheckBox();
-            this.HideSearchWithEscapeCheckbox = new System.Windows.Forms.CheckBox();
             this.HideOnFocusLostCheckbox = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ClearWithEscapeRadioButton = new System.Windows.Forms.RadioButton();
+            this.HideWithEscRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
@@ -69,7 +70,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 31);
+            this.label1.Location = new System.Drawing.Point(13, 31);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(100, 20);
             this.label1.TabIndex = 2;
@@ -85,16 +86,6 @@
             this.ConsiderFullScreenCheckBox.Text = "Don\'t show search box when using Full Screen application";
             this.ConsiderFullScreenCheckBox.UseVisualStyleBackColor = true;
             this.ConsiderFullScreenCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
-            // 
-            // HideSearchWithEscapeCheckbox
-            // 
-            this.HideSearchWithEscapeCheckbox.AutoSize = true;
-            this.HideSearchWithEscapeCheckbox.Location = new System.Drawing.Point(22, 70);
-            this.HideSearchWithEscapeCheckbox.Name = "HideSearchWithEscapeCheckbox";
-            this.HideSearchWithEscapeCheckbox.Size = new System.Drawing.Size(248, 24);
-            this.HideSearchWithEscapeCheckbox.TabIndex = 4;
-            this.HideSearchWithEscapeCheckbox.Text = "Hide Search box with Escape key";
-            this.HideSearchWithEscapeCheckbox.UseVisualStyleBackColor = true;
             // 
             // HideOnFocusLostCheckbox
             // 
@@ -128,22 +119,45 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ClearWithEscapeRadioButton);
+            this.groupBox2.Controls.Add(this.HideWithEscRadioButton);
             this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.HotKeyTextBox);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.HideSearchWithEscapeCheckbox);
             this.groupBox2.Location = new System.Drawing.Point(12, 87);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(437, 118);
+            this.groupBox2.Size = new System.Drawing.Size(437, 138);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Shortcuts";
+            // 
+            // ClearWithEscapeRadioButton
+            // 
+            this.ClearWithEscapeRadioButton.AutoSize = true;
+            this.ClearWithEscapeRadioButton.Location = new System.Drawing.Point(22, 100);
+            this.ClearWithEscapeRadioButton.Name = "ClearWithEscapeRadioButton";
+            this.ClearWithEscapeRadioButton.Size = new System.Drawing.Size(251, 24);
+            this.ClearWithEscapeRadioButton.TabIndex = 8;
+            this.ClearWithEscapeRadioButton.TabStop = true;
+            this.ClearWithEscapeRadioButton.Text = "Clear Search Box with Escape Key";
+            this.ClearWithEscapeRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // HideWithEscRadioButton
+            // 
+            this.HideWithEscRadioButton.AutoSize = true;
+            this.HideWithEscRadioButton.Location = new System.Drawing.Point(22, 70);
+            this.HideWithEscRadioButton.Name = "HideWithEscRadioButton";
+            this.HideWithEscRadioButton.Size = new System.Drawing.Size(249, 24);
+            this.HideWithEscRadioButton.TabIndex = 7;
+            this.HideWithEscRadioButton.TabStop = true;
+            this.HideWithEscRadioButton.Text = "Hide Search box with Escape Key";
+            this.HideWithEscRadioButton.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.HideOnFocusLostCheckbox);
             this.groupBox3.Controls.Add(this.ConsiderFullScreenCheckBox);
-            this.groupBox3.Location = new System.Drawing.Point(12, 211);
+            this.groupBox3.Location = new System.Drawing.Point(12, 233);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(437, 118);
             this.groupBox3.TabIndex = 9;
@@ -152,7 +166,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(314, 414);
+            this.SaveButton.Location = new System.Drawing.Point(314, 436);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(135, 29);
             this.SaveButton.TabIndex = 10;
@@ -162,7 +176,7 @@
             // 
             // CancelButton
             // 
-            this.CancelButton.Location = new System.Drawing.Point(211, 414);
+            this.CancelButton.Location = new System.Drawing.Point(211, 436);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(94, 29);
             this.CancelButton.TabIndex = 11;
@@ -172,7 +186,7 @@
             // TipTextLabel
             // 
             this.TipTextLabel.AutoSize = true;
-            this.TipTextLabel.Location = new System.Drawing.Point(12, 332);
+            this.TipTextLabel.Location = new System.Drawing.Point(12, 354);
             this.TipTextLabel.Name = "TipTextLabel";
             this.TipTextLabel.Size = new System.Drawing.Size(307, 40);
             this.TipTextLabel.TabIndex = 12;
@@ -182,7 +196,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(478, 465);
+            this.ClientSize = new System.Drawing.Size(478, 482);
             this.Controls.Add(this.TipTextLabel);
             this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.SaveButton);
@@ -210,7 +224,6 @@
         private TextBox HotKeyTextBox;
         private Label label1;
         private CheckBox ConsiderFullScreenCheckBox;
-        private CheckBox HideSearchWithEscapeCheckbox;
         private CheckBox HideOnFocusLostCheckbox;
         private Button button1;
         private GroupBox groupBox1;
@@ -219,5 +232,7 @@
         private Button SaveButton;
         private Button CancelButton;
         private Label TipTextLabel;
+        private RadioButton ClearWithEscapeRadioButton;
+        private RadioButton HideWithEscRadioButton;
     }
 }
