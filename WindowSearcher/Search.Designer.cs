@@ -31,9 +31,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Search));
             this.SearchTextBox = new System.Windows.Forms.TextBox();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.WindowFinderNotify = new System.Windows.Forms.NotifyIcon(this.components);
             this.TaskBarMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowListBox = new System.Windows.Forms.ListBox();
@@ -49,42 +50,52 @@
             this.SearchTextBox.Size = new System.Drawing.Size(715, 47);
             this.SearchTextBox.TabIndex = 0;
             this.SearchTextBox.TextChanged += new System.EventHandler(this.SearchTextBox_TextChanged);
+            this.SearchTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchTextBox_KeyDown);
             this.SearchTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SearchTextBox_KeyPress);
             // 
-            // notifyIcon1
+            // WindowFinderNotify
             // 
-            this.notifyIcon1.ContextMenuStrip = this.TaskBarMenu;
-            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
+            this.WindowFinderNotify.ContextMenuStrip = this.TaskBarMenu;
+            this.WindowFinderNotify.Icon = ((System.Drawing.Icon)(resources.GetObject("WindowFinderNotify.Icon")));
+            this.WindowFinderNotify.Text = "WindowFinder";
+            this.WindowFinderNotify.Visible = true;
             // 
             // TaskBarMenu
             // 
             this.TaskBarMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.TaskBarMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showToolStripMenuItem,
+            this.settingsToolStripMenuItem,
             this.toolStripMenuItem1,
             this.exitToolStripMenuItem});
             this.TaskBarMenu.Name = "TaskBarMenu";
-            this.TaskBarMenu.Size = new System.Drawing.Size(115, 58);
+            this.TaskBarMenu.Size = new System.Drawing.Size(184, 82);
             this.TaskBarMenu.Text = "WindowFinder";
             // 
             // showToolStripMenuItem
             // 
             this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-            this.showToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.showToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.showToolStripMenuItem.Text = "Show";
             this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.settingsToolStripMenuItem.Text = "Options";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(111, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -124,11 +135,12 @@
 
         private Button button1;
         private TextBox SearchTextBox;
-        private NotifyIcon notifyIcon1;
+        private NotifyIcon WindowFinderNotify;
         private ContextMenuStrip TaskBarMenu;
         private ToolStripMenuItem showToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ListBox WindowListBox;
+        private ToolStripMenuItem settingsToolStripMenuItem;
     }
 }

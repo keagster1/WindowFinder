@@ -57,30 +57,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="WindowFinderNotify.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="TaskBarMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>150, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="WindowFinderNotify.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAEBAAAAEAGABoAwAAFgAAACgAAAAQAAAAIAAAAAEAGAAAAAAAaAMAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAD///////////////////////////////////////////////8AAAAAAAAAAAD///////+3
-        rZu3rZu3rZu3rZu3rZv///+3rZu3rZu3rZu3rZv///////8AAAD///////////+3rZu3rZu3rZu3rZu3
-        rZv///+3rZu3rZu3rZu3rZv///////////////////////+3rZu3rZu3rZu3rZu3rZv///+3rZu3rZu3
-        rZu3rZv///////////////////////9qamlqamk28vsmcd9jV9n///9qamk28vsmcd9jV9n/////////
-        //////////////////////////////////////////////////////////////////////////////8A
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD///////////////////////8AAAD/////////////
-        //////////////////8AAAD///////////////////////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAC3rZv///////////////////////////////////////////+3rZu3rZu3rZu3rZu3rZv/////
-        //////////////+3rZu3rZu3rZu3rZu3rZv///+3rZu3rZu3rZu3rZu3rZv///////////////////+3
-        rZu3rZu3rZu3rZu3rZv///9qamlqamk28vsmcd9jV9n///////////////////+3rZu3rZu3rZu3rZu3
-        rZv///////////////////////////////////////////9qamlqamk28vsmcd9jV9n/////////////
-        //////////////////8AAAD///////////////////////////////////////////////////////8A
-        AAAAAAAAAAD///////////////////////////////////////////////8AAAAAAADAAwAAgAEAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAADAAwAA
-</value>
-  </data>
 </root>

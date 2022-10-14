@@ -8,6 +8,8 @@ using System.Data;
 using System.Text.RegularExpressions;
 using Microsoft.TeamFoundation.Common.Internal;
 using Topshelf.Runtime.Windows;
+using System.Windows.Input;
+
 namespace WindowSearcher
 {
     public partial class Search : Form
@@ -16,6 +18,23 @@ namespace WindowSearcher
         public Search()
         {
             InitializeComponent();
+
+            int id = 0;
+            uint keyModifier = (int)KeyModifier.Alt;
+            uint key = (uint)Keys.F1.GetHashCode();
+            
+
+
+            // check if settings has values
+            if ((uint)Properties.Settings.Default["HotKey"] > 0 && (uint)Properties.Settings.Default["Modifiers"] > 0)
+            {
+                RegisterHotKey(this.Handle, id, (uint)Properties.Settings.Default["Modifiers"], (uint)Properties.Settings.Default["HotKey"]);
+                Debug.WriteLine("Registering: " + id + " " + keyModifier + " " + key);
+            } else
+            {
+                RegisterHotKey(this.Handle, id, keyModifier, key);
+                Debug.WriteLine("Registering ALT + F1 as: " + id + " " + keyModifier + " " + key);
+            }
         }
 
         // Registers a hot key with Windows.
@@ -25,15 +44,21 @@ namespace WindowSearcher
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
+        enum KeyModifier { 
+            None = 0,
+            Alt = 1,
+            Control = 2,
+            Shift = 4,
+            WinKey = 8
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            HotKeys.SetHotKey(Handle);
-            
             Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in w)
             {
                 WindowListBox.Items.Add(window.Value);
-                Debug.WriteLine("Added " + window.Value);
+                //Debug.WriteLine("Added " + window.Value);
             }
 
 
@@ -46,11 +71,10 @@ namespace WindowSearcher
             const int WM_KEYDOWN = 0x0100;
             //const int WM_KEYUP = 0x0101;
             int msgVal = m.WParam.ToInt32();
-
             if (m.Msg == WM_KEYDOWN)
-            {
+            {              
                 switch ((Keys)msgVal)
-                {
+                { 
                     case Keys.Up:
                         MoveSelectedIndex(true);
                         break;
@@ -71,7 +95,7 @@ namespace WindowSearcher
                         {
                             if (window.Value == WindowListBox.SelectedItem.ToString())
                             {
-                                
+
                                 // set focus to window
                                 FocusWindow(window.Key);
                                 break;
@@ -96,7 +120,7 @@ namespace WindowSearcher
                 {
                     WindowListBox.SelectedIndex = 0;
                     // increment selected item in windowlistview
-                    
+
                 }
             }
             if (!is_going_up)
@@ -104,7 +128,8 @@ namespace WindowSearcher
                 if (WindowListBox.SelectedIndex == WindowListBox.Items.Count - 1)
                 {
                     WindowListBox.SelectedIndex = 0;
-                } else 
+                }
+                else
                 {
                     if (hasChangedSelection)
                         WindowListBox.SelectedIndex += 1;
@@ -114,7 +139,9 @@ namespace WindowSearcher
                         hasChangedSelection = true;
                     }
                 }
-            } else {
+            }
+            else
+            {
                 if (WindowListBox.SelectedIndex == 0)
                 {
                     WindowListBox.SelectedIndex = WindowListBox.Items.Count - 1;
@@ -157,12 +184,12 @@ namespace WindowSearcher
                 foreach (KeyValuePair<IntPtr, string> window in w)
                 {
                     WindowListBox.Items.Add(window.Value);
-                    Debug.WriteLine("Added " + window.Value);
+                    //Debug.WriteLine("Added " + window.Value);
                 }
-                Debug.WriteLine("reset");
+                //Debug.WriteLine("reset");
                 return;
             }
-            
+
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             // loop over all windows
             foreach (KeyValuePair<IntPtr, string> window in windows)
@@ -208,23 +235,29 @@ namespace WindowSearcher
             WindowListBox.Size = new Size(WindowListBox.Size.Width, WindowListBox.Items.Count * 30);
             this.Size = new Size(this.Size.Width, WindowListBox.Size.Height + 50);
         }
-        
+
         private void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
 
         }
+        public string ToHex(int value)
+        {
+            return String.Format("0x{0:X}", value);
+        }
 
-
-        private static int WM_HOTKEY = 0x0312;
+        private int WM_HOTKEY = 0x0312;
         protected override void WndProc(ref Message hotkey)
         {
-            bool Visible = this.Visible;
             base.WndProc(ref hotkey);
 
-            if (hotkey.Msg == 0x0312)
+            if (hotkey.Msg == WM_HOTKEY)
             {
-                //your code here
-                Debug.WriteLine("Global hotkey pressed");
+                Keys key = (Keys)(((int)hotkey.LParam >> 16) & 0xFFFF);                  // The key of the hotkey that was pressed.
+                KeyModifier modifier = (KeyModifier)((int)hotkey.LParam & 0xFFFF);       // The modifier of the hotkey that was pressed.
+                int id = hotkey.WParam.ToInt32();
+
+                Debug.WriteLine(key + " " + modifier + " " + id);
+
                 this.Show();
                 this.WindowState = FormWindowState.Normal;
                 Search.SetForegroundWindow(Handle);
@@ -236,6 +269,7 @@ namespace WindowSearcher
                     WindowListBox.Items.Add(window.Value);
                 }
                 SearchTextBox.Focus();
+                hotkey.Result = (IntPtr)1;
             }
             const int WM_ACTIVATEAPP = 0x001C;
             if (hotkey.Msg == WM_ACTIVATEAPP)
@@ -245,6 +279,7 @@ namespace WindowSearcher
                     this.Hide();
                 }
             }
+            
         }
 
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
@@ -257,7 +292,7 @@ namespace WindowSearcher
         {
             Application.Exit();
         }
-        
+
         private void WindowListBox_MouseDoubleClick_1(object sender, MouseEventArgs e)
         {
             if (WindowListBox.SelectedItems.Count == 0)
@@ -269,10 +304,10 @@ namespace WindowSearcher
             {
                 return;
             }
-            
-            
+
+
             window_name = WindowListBox.SelectedItems[0].ToString();
-            
+
 
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in windows)
@@ -283,6 +318,24 @@ namespace WindowSearcher
                     this.Hide();
                     return;
                 }
+            }
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Options options = new Options();
+            options.Show();
+        }
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // check if ctrl+o is pressed
+            if (e.Control && e.KeyCode == Keys.O)
+            {
+                // show the options form
+                Options options = new Options();
+                options.Show();
+                e.SuppressKeyPress = true;
             }
         }
     }
@@ -315,11 +368,11 @@ namespace WindowSearcher
         private delegate bool EnumWindowsProc(HWND hWnd, int lParam);
 
         // import win32
-        
+
 
         [DllImport("USER32.DLL")]
         private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
-        
+
         [DllImport("USER32.DLL")]
         private static extern int GetWindowText(HWND hWnd, StringBuilder lpString, int nMaxCount);
 
