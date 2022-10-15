@@ -27,7 +27,7 @@ Effortlessly search for and show any open window on your computer!
 - Press Escape to hide the search window
 
 ### Options
-<img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="400" height="400" />
+<img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="500" height="500" />
 
 ---
 ### TODO:
