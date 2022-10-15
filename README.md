@@ -4,11 +4,7 @@
 
 Effortlessly search for and show any open window on your computer!
 
-<img src="gifs/WindowFinderMainDemo.gif" data-canonical-src="gifs/WindowFinderMainDemo.gif" width="500" height="500" />
-
-
-
-
+<img src="gifs/WindowFinderMainDemo.gif" data-canonical-src="gifs/WindowFinderMainDemo.gif.gif" width="500" height="500" />
 
 ### Features:
  Search Open Windows across all Virtual Desktops!
@@ -31,8 +27,9 @@ Effortlessly search for and show any open window on your computer!
 - Press Escape to hide the search window
 
 ### Options
+<img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="400" height="400" />
 
-
+---
 ### TODO:
 - MAKE OR GET BETTER ICON
 - Add ability to pin windows as favorites

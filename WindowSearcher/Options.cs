@@ -30,13 +30,13 @@ namespace WindowSearcher
             // check if hotkey was changed
             if (_isHotKeyChanged)
             {
-                uint hotKey = (uint)Properties.Settings.Default["HotKey"];
-                uint modifiers = (uint)Properties.Settings.Default["Modifiers"];
+                //uint hotKey = (uint)Properties.Settings.Default["HotKey"];
+                //uint modifiers = (uint)Properties.Settings.Default["Modifiers"];
 
                 if (hotKey != 0)
                 {
                     Properties.Settings.Default["HotKey"] = hotKey;
-                    Properties.Settings.Default["Modifiers"] = modifiers;
+                    Properties.Settings.Default["Modifiers"] = (uint)keyModifier;
                     HotKeyTextBox.Enabled = false;
                     // if hotkey was changed, unregister old hotkey and register new hotkey
                     HotKeys.UnregisterHotKey(this.Handle, 0);
@@ -110,6 +110,7 @@ namespace WindowSearcher
         private void button1_Click(object sender, EventArgs e)
         {
             HotKeyTextBox.Enabled = !HotKeyTextBox.Enabled;
+            HotKeyTextBox.Focus();
         }
         enum KeyModifier
         {
@@ -119,12 +120,14 @@ namespace WindowSearcher
             Shift = 4,
             WinKey = 8
         }
+        int keyModifier = 0;
+        uint hotKey = 0;
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             Keys modifierKeys = e.Modifiers;
             Keys pressedKey = e.KeyData ^ modifierKeys;
-            int keyModifier = (int)KeyModifier.None;
-            uint hotKey = (uint)pressedKey.GetHashCode();
+            keyModifier = (int)KeyModifier.None;
+            hotKey = (uint)pressedKey.GetHashCode();
 
             //print modifier as 
             var modifiers = modifierKeys;
@@ -161,8 +164,9 @@ namespace WindowSearcher
             //Debug.WriteLine(ToHex((int)pressedHotKey));
             HotKeyTextBox.Text = converter.ConvertToString(pressedHotKey);
             Debug.WriteLine("Detected" + hotKey.ToString() + " and " + keyModifier);
-            Properties.Settings.Default["HotKey"] = (uint)hotKey;
-            Properties.Settings.Default["Modifiers"] = (uint)keyModifier;
+            //Properties.Settings.Default["HotKey"] = (uint)hotKey;
+            //Properties.Settings.Default["Modifiers"] = (uint)keyModifier;
+            
             _isHotKeyChanged = true;
 
 
