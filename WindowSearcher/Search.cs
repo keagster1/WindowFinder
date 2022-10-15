@@ -3,7 +3,7 @@ using System.Text;
 using HWND = System.IntPtr;
 using System.Text.RegularExpressions;
 
-namespace WindowSearcher
+namespace WindowFinder
 {
     public partial class Search : Form
     {

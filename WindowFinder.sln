@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowSearcher", "WindowSearcher\WindowSearcher.csproj", "{1AA3D92F-AB4C-48E7-B8F5-C822309D61E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowFinder", "WindowSearcher\WindowFinder.csproj", "{1AA3D92F-AB4C-48E7-B8F5-C822309D61E7}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup1", "Setup1\Setup1.vdproj", "{B8F0BAE2-1266-45BB-A55C-6A5157B350FC}"
 EndProject

@@ -1,22 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Runtime.InteropServices;
 
-namespace WindowSearcher
+namespace WindowFinder
 {
     public partial class Options : Form
     {
+        private enum KeyModifier
+        {
+            None = 0,
+            Alt = 1,
+            Control = 2,
+            Shift = 4,
+            WinKey = 8
+        }
+        
         private bool _isHotKeyChanged = false;
+
+        private int keyModifier = 0;
+        private uint hotKey = 0;
         public Options()
         {
             InitializeComponent();
+        }
+        
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk); //handle, Id of hotkey, modifier (e.g ALT + DEL), hotkey key
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+
+        public static void SetHotKey(IntPtr hWnd, uint modifiers, uint keyHashCode)
+        {
+            UnregisterHotKey(hWnd, 0);
+            RegisterHotKey(hWnd, 0, modifiers, keyHashCode);
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -32,8 +47,8 @@ namespace WindowSearcher
                     HotKeyTextBox.Enabled = false;
                     
                     // if hotkey was changed, unregister old hotkey and register new hotkey
-                    HotKeys.UnregisterHotKey(this.Handle, 0);
-                    HotKeys.SetHotKey(this.Handle, 0, (uint)HotKeyTextBox.Text.ToUpper().ToCharArray()[0]);
+                    UnregisterHotKey(this.Handle, 0);
+                    SetHotKey(this.Handle, 0, (uint)HotKeyTextBox.Text.ToUpper().ToCharArray()[0]);
                 }
                 else
                 {
@@ -46,7 +61,6 @@ namespace WindowSearcher
             Properties.Settings.Default["HideSearchWithEscape"] = HideWithEscRadioButton.Checked;
             Properties.Settings.Default["HideOnFocusLost"] = HideOnFocusLostCheckbox.Checked;
 
-            
             // check if LaunchOnStartup changed
             if ((bool)Properties.Settings.Default["LaunchOnStartup"] != LaunchOnStartupCheckbox.Checked)
             {
@@ -60,11 +74,10 @@ namespace WindowSearcher
                     if (rk == null)
                     {
                         MessageBox.Show("Could not add to startup. Please try again. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                     }
                     else
                     {
-                        rk.SetValue("WindowSearcher", Application.ExecutablePath.ToString());
+                        rk.SetValue("WindowFinder", Application.ExecutablePath.ToString());
                     }
                 
                 }
@@ -73,7 +86,7 @@ namespace WindowSearcher
                     Microsoft.Win32.RegistryKey? rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     if (rk != null)
                     {
-                        rk.DeleteValue("WindowSearcher", false);
+                        rk.DeleteValue("WindowFinder", false);
                     }                    
                 }
             }
@@ -110,27 +123,6 @@ namespace WindowSearcher
             HotKeyTextBox.Text = (KeyModifier)mod + " + " + converter.ConvertToString(hotKeyKey);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            HotKeyTextBox.Enabled = !HotKeyTextBox.Enabled;
-            HotKeyTextBox.Focus();
-        }
-        enum KeyModifier
-        {
-            None = 0,
-            Alt = 1,
-            Control = 2,
-            Shift = 4,
-            WinKey = 8
-        }
-        int keyModifier = 0;
-        uint hotKey = 0;
-        
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void HotKeyTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             Keys modifierKeys = e.Modifiers;
@@ -150,17 +142,17 @@ namespace WindowSearcher
             if (e.Control)
             {
                 keyModifier += (int)KeyModifier.Control;
-                pressedHotKey = pressedHotKey ^ Keys.Control;
+                pressedHotKey ^= Keys.Control;
             }
             if (e.Alt)
             {
                 keyModifier += (int)KeyModifier.Alt;
-                pressedHotKey = pressedHotKey ^ Keys.Alt;
+                pressedHotKey ^= Keys.Alt;
             }
             if (e.Shift)
             {
                 keyModifier += (int)KeyModifier.Shift;
-                pressedHotKey = pressedHotKey ^ Keys.Shift;
+                pressedHotKey ^= Keys.Shift;
             }
 
             HotKeyTextBox.Text = converter.ConvertToString(pressedHotKey);
@@ -168,6 +160,12 @@ namespace WindowSearcher
             _isHotKeyChanged = true;
 
             e.SuppressKeyPress = true;
+        }
+
+        private void ChangeHotKeyButton_Click(object sender, EventArgs e)
+        {
+            HotKeyTextBox.Enabled = !HotKeyTextBox.Enabled;
+            HotKeyTextBox.Focus();
         }
     }
 }

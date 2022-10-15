@@ -1,4 +1,4 @@
-namespace WindowSearcher
+namespace WindowFinder
 {
     internal static class Program
     {

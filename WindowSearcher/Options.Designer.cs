@@ -1,4 +1,4 @@
-﻿namespace WindowSearcher
+﻿namespace WindowFinder
 {
     partial class Options
     {
@@ -34,14 +34,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ConsiderFullScreenCheckBox = new System.Windows.Forms.CheckBox();
             this.HideOnFocusLostCheckbox = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ChangeHotKeyButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ClearWithEscapeRadioButton = new System.Windows.Forms.RadioButton();
             this.HideWithEscRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.SaveButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
             this.TipTextLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -96,15 +95,15 @@
             this.HideOnFocusLostCheckbox.Text = "Hide Search box when focus is lost";
             this.HideOnFocusLostCheckbox.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // ChangeHotKeyButton
             // 
-            this.button1.Location = new System.Drawing.Point(250, 26);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Change";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.ChangeHotKeyButton.Location = new System.Drawing.Point(250, 26);
+            this.ChangeHotKeyButton.Name = "ChangeHotKeyButton";
+            this.ChangeHotKeyButton.Size = new System.Drawing.Size(94, 29);
+            this.ChangeHotKeyButton.TabIndex = 6;
+            this.ChangeHotKeyButton.Text = "Change";
+            this.ChangeHotKeyButton.UseVisualStyleBackColor = true;
+            this.ChangeHotKeyButton.Click += new System.EventHandler(this.ChangeHotKeyButton_Click);
             // 
             // groupBox1
             // 
@@ -120,7 +119,7 @@
             // 
             this.groupBox2.Controls.Add(this.ClearWithEscapeRadioButton);
             this.groupBox2.Controls.Add(this.HideWithEscRadioButton);
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.ChangeHotKeyButton);
             this.groupBox2.Controls.Add(this.HotKeyTextBox);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(12, 87);
@@ -215,7 +214,7 @@
         private Label label1;
         private CheckBox ConsiderFullScreenCheckBox;
         private CheckBox HideOnFocusLostCheckbox;
-        private Button button1;
+        private Button ChangeHotKeyButton;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
         private GroupBox groupBox3;
