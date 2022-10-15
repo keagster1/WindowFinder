@@ -4,8 +4,8 @@
 
 Effortlessly search for and show any open window on your computer!
 
-Simply install, set your hot key and thats it! Now anytime you use the hotkey a search box will show up with the list of open windows. Use the arrow keys or
-mouse to select the window you want to show and either press enter or double click. That's it!
+<img src="gifs/WindowFinderMainDemo.gif" data-canonical-src="gifs/WindowFinderMainDemo.gif" width="500" height="500" />
+
 
 
 ### Features:
@@ -29,6 +29,9 @@ mouse to select the window you want to show and either press enter or double cli
 - Press Escape to hide the search window
 
 ### TODO:
+- Add ability to pin windows as favorites
+    - Will add these to the top of the list everytime
+    - Can be turned on/off
 - Refactor
     - Break code into functions
     - Remove unneeded code
