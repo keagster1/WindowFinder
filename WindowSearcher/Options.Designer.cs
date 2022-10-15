@@ -173,16 +173,6 @@
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // CancelButton
-            // 
-            this.CancelButton.Location = new System.Drawing.Point(211, 436);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(94, 29);
-            this.CancelButton.TabIndex = 11;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
             // TipTextLabel
             // 
             this.TipTextLabel.AutoSize = true;
@@ -198,7 +188,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 482);
             this.Controls.Add(this.TipTextLabel);
-            this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -231,7 +220,6 @@
         private GroupBox groupBox2;
         private GroupBox groupBox3;
         private Button SaveButton;
-        private Button CancelButton;
         private Label TipTextLabel;
         private RadioButton ClearWithEscapeRadioButton;
         private RadioButton HideWithEscRadioButton;

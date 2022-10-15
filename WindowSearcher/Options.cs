@@ -55,13 +55,26 @@ namespace WindowSearcher
                 // if LaunchOnStartup changed, update registry
                 if (LaunchOnStartupCheckbox.Checked)
                 {
-                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                    rk.SetValue("WindowSearcher", Application.ExecutablePath.ToString());
+                    
+                    Microsoft.Win32.RegistryKey? rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    if (rk == null)
+                    {
+                        MessageBox.Show("Could not add to startup. Please try again. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    }
+                    else
+                    {
+                        rk.SetValue("WindowSearcher", Application.ExecutablePath.ToString());
+                    }
+                
                 }
                 else
                 {
-                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                    rk.DeleteValue("WindowSearcher", false);
+                    Microsoft.Win32.RegistryKey? rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    if (rk != null)
+                    {
+                        rk.DeleteValue("WindowSearcher", false);
+                    }                    
                 }
             }
             Properties.Settings.Default.Save();
