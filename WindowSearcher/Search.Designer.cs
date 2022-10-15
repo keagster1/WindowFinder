@@ -38,7 +38,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WindowDataGridView = new System.Windows.Forms.DataGridView();
-            this.Icon = new System.Windows.Forms.DataGridViewImageColumn();
+            this.WindowIcon = new System.Windows.Forms.DataGridViewImageColumn();
             this.WindowName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TaskBarMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.WindowDataGridView)).BeginInit();
@@ -113,7 +113,7 @@
             this.WindowDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.WindowDataGridView.ColumnHeadersVisible = false;
             this.WindowDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Icon,
+            this.WindowIcon,
             this.WindowName});
             this.WindowDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.WindowDataGridView.Location = new System.Drawing.Point(0, 48);
@@ -132,14 +132,11 @@
             this.WindowDataGridView.TabIndex = 3;
             this.WindowDataGridView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindowDataGridView_MouseDoubleClick);
             // 
-            // Icon
+            // WindowIcon
             // 
-            this.Icon.HeaderText = "Icon";
-            this.Icon.MinimumWidth = 6;
-            this.Icon.Name = "Icon";
-            this.Icon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Icon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Icon.Width = 6;
+            this.WindowIcon.MinimumWidth = 6;
+            this.WindowIcon.Name = "WindowIcon";
+            this.WindowIcon.Width = 6;
             // 
             // WindowName
             // 
@@ -156,6 +153,7 @@
             this.Controls.Add(this.WindowDataGridView);
             this.Controls.Add(this.SearchTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximumSize = new System.Drawing.Size(715, 358);
             this.MinimumSize = new System.Drawing.Size(715, 48);
@@ -180,7 +178,7 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private DataGridView WindowDataGridView;
-        private DataGridViewImageColumn Icon;
+        private DataGridViewImageColumn WindowIcon;
         private DataGridViewTextBoxColumn WindowName;
     }
 }

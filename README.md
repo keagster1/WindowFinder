@@ -1,10 +1,12 @@
-# Window Finder
+# ![](./WindowSearcher//WindowFinderIcon.png) Window Finder
 
 ⭐ Star us on GitHub if you think this Utility is useful 😊
 
 Effortlessly search for and show any open window on your computer!
 
 <img src="gifs/WindowFinderMainDemo.gif" data-canonical-src="gifs/WindowFinderMainDemo.gif" width="500" height="500" />
+
+
 
 
 
@@ -29,6 +31,7 @@ Effortlessly search for and show any open window on your computer!
 - Press Escape to hide the search window
 
 ### TODO:
+- MAKE OR GET BETTER ICON
 - Add ability to pin windows as favorites
     - Will add these to the top of the list everytime
     - Can be turned on/off
