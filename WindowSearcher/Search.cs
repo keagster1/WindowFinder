@@ -58,6 +58,12 @@ namespace WindowSearcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            WindowListView.FullRowSelect = true;
+            WindowListView.GridLines = false;
+            WindowListView.View = System.Windows.Forms.View.Details;
+            WindowListView.Scrollable = true;
+            WindowListView.Columns[0].Width = WindowListView.Width-30; // set width to size of listview
+            
             Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in w)
             {
@@ -193,6 +199,7 @@ namespace WindowSearcher
                     }
                 }
             }
+            WindowListView.EnsureVisible(WindowListView.SelectedItems[0].Index);
         }
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -247,7 +254,7 @@ namespace WindowSearcher
             }
             WindowListView.Size = new Size(WindowListView.Size.Width, WindowListView.Items.Count * itemHeight + itemHeight);
             var height = SearchTextBox.Size.Height + WindowListView.Size.Height ;
-
+            WindowListView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - 50);
             this.Size = new Size(this.Size.Width, height);
         }
 
@@ -418,18 +425,15 @@ namespace WindowSearcher
 
         private void WindoListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("Got to step 0");
             if (WindowListView.SelectedItems.Count == 0)
             {
                 return;
             }
             string window_name;
-            Debug.WriteLine("Got to step 1");
             if (WindowListView.SelectedItems[0].ToString() == "")
             {
                 return;
             }
-            Debug.WriteLine("Got to step 2");
 
             window_name = WindowListView.SelectedItems[0].Text;
 
