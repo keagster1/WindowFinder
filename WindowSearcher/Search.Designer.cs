@@ -37,9 +37,11 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.WindowTextCol = new System.Windows.Forms.ColumnHeader();
-            this.WindowListView = new System.Windows.Forms.ListView();
+            this.WindowDataGridView = new System.Windows.Forms.DataGridView();
+            this.Icon = new System.Windows.Forms.DataGridViewImageColumn();
+            this.WindowName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TaskBarMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.WindowDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // SearchTextBox
@@ -100,34 +102,57 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // WindowTextCol
+            // WindowDataGridView
             // 
-            this.WindowTextCol.Text = "Window Name";
-            this.WindowTextCol.Width = 500;
+            this.WindowDataGridView.AllowUserToAddRows = false;
+            this.WindowDataGridView.AllowUserToDeleteRows = false;
+            this.WindowDataGridView.AllowUserToResizeColumns = false;
+            this.WindowDataGridView.AllowUserToResizeRows = false;
+            this.WindowDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.WindowDataGridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.WindowDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.WindowDataGridView.ColumnHeadersVisible = false;
+            this.WindowDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Icon,
+            this.WindowName});
+            this.WindowDataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.WindowDataGridView.Location = new System.Drawing.Point(0, 48);
+            this.WindowDataGridView.MultiSelect = false;
+            this.WindowDataGridView.Name = "WindowDataGridView";
+            this.WindowDataGridView.RowHeadersVisible = false;
+            this.WindowDataGridView.RowHeadersWidth = 51;
+            this.WindowDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.WindowDataGridView.RowTemplate.Height = 30;
+            this.WindowDataGridView.RowTemplate.ReadOnly = true;
+            this.WindowDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.WindowDataGridView.ShowCellToolTips = false;
+            this.WindowDataGridView.ShowEditingIcon = false;
+            this.WindowDataGridView.ShowRowErrors = false;
+            this.WindowDataGridView.Size = new System.Drawing.Size(715, 304);
+            this.WindowDataGridView.TabIndex = 3;
             // 
-            // WindowListView
+            // Icon
             // 
-            this.WindowListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.WindowTextCol});
-            this.WindowListView.FullRowSelect = true;
-            this.WindowListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.WindowListView.Location = new System.Drawing.Point(0, 49);
-            this.WindowListView.MultiSelect = false;
-            this.WindowListView.Name = "WindowListView";
-            this.WindowListView.ShowGroups = false;
-            this.WindowListView.Size = new System.Drawing.Size(715, 304);
-            this.WindowListView.TabIndex = 2;
-            this.WindowListView.UseCompatibleStateImageBehavior = false;
-            this.WindowListView.View = System.Windows.Forms.View.List;
-            this.WindowListView.SelectedIndexChanged += new System.EventHandler(this.WindowListView_SelectedIndexChanged);
-            this.WindowListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindoListView_MouseDoubleClick);
+            this.Icon.HeaderText = "Icon";
+            this.Icon.MinimumWidth = 6;
+            this.Icon.Name = "Icon";
+            this.Icon.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Icon.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Icon.Width = 6;
+            // 
+            // WindowName
+            // 
+            this.WindowName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.WindowName.HeaderText = "WindowName";
+            this.WindowName.MinimumWidth = 6;
+            this.WindowName.Name = "WindowName";
             // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 358);
-            this.Controls.Add(this.WindowListView);
+            this.Controls.Add(this.WindowDataGridView);
             this.Controls.Add(this.SearchTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
@@ -137,6 +162,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.TaskBarMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.WindowDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,7 +178,8 @@
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
-        private ColumnHeader WindowTextCol;
-        private ListView WindowListView;
+        private DataGridView WindowDataGridView;
+        private DataGridViewImageColumn Icon;
+        private DataGridViewTextBoxColumn WindowName;
     }
 }

@@ -62,22 +62,19 @@ namespace WindowSearcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            WindowListView.FullRowSelect = true;
-            WindowListView.GridLines = false;
-            WindowListView.View = System.Windows.Forms.View.Details;
-            WindowListView.Scrollable = true;
-            WindowListView.Columns[0].Width = WindowListView.Width-30; // set width to size of listview
-            
             Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in w)
             {
-                WindowListView.Items.Add(window.Value);
-                //Debug.WriteLine("Added " + window.Value);
+                addWindowToDataGrid(window);
             }
+            WindowDataGridView.CurrentCell.Selected = false;
 
-
-            //SearchTextBox_TextChanged(sender, e);
             Resize();
+        }
+
+        public void addWindowToDataGrid(KeyValuePair<IntPtr, string> w)
+        {
+            WindowDataGridView.Rows.Add(GetSmallWindowIcon(w.Key), w.Value);
         }
 
         protected override bool ProcessKeyPreview(ref Message m)
@@ -90,11 +87,11 @@ namespace WindowSearcher
                 switch ((Keys)msgVal)
                 { 
                     case Keys.Up:
-                        MoveViewSelectedIndex(true);
+                        MoveViewSelectedIndexDataGrid(true);
                         break;
 
                     case Keys.Down:
-                        MoveViewSelectedIndex(false);
+                        MoveViewSelectedIndexDataGrid(false);
                         break;
                     case Keys.Escape:
                         if ((bool)Properties.Settings.Default["HideSearchWithEscape"])
@@ -106,7 +103,7 @@ namespace WindowSearcher
                         else
                         {
                             SearchTextBox.Text = "";
-                            ResetWindowView();
+                            ResetDataGridView();
                             // resize listbox to fit 10 items
                             Resize();
                             m.Result = (IntPtr)1;
@@ -137,13 +134,13 @@ namespace WindowSearcher
                         // find handle for text
                         foreach (KeyValuePair<IntPtr, string> window in WindowList)
                         {
-                            if (WindowListView.SelectedItems.Count == 0)
+                            if (WindowDataGridView.SelectedRows.Count == 0)
                             {
                                 break;
                             }
-                            if (window.Value.Equals(WindowListView.SelectedItems[0].Text))
+                            
+                            if (window.Value.Equals(WindowDataGridView.SelectedRows[0].Cells[1].Value))
                             {
-
                                 // set focus to window
                                 FocusWindow(window.Key);
                                 // supress key event
@@ -162,53 +159,51 @@ namespace WindowSearcher
 
         public bool hasChangedSelection = false;
         
-        public void MoveViewSelectedIndex(bool is_going_up)
+        public void MoveViewSelectedIndexDataGrid(bool is_going_up)
         {
             // check if anything is selected
-
-            if (WindowListView.Items.Count == 0)
+            if(WindowDataGridView.Rows.Count == 0)
             {
-                if (WindowListView.SelectedItems.Count != 0)
+                if (WindowDataGridView.SelectedCells.Count != 0)
                 {
-                    //WindowListView.SelectedIndices.Add(0);
-                    WindowListView.Clear();
+                    WindowDataGridView.ClearSelection();
                 }
-            }
-            else if (WindowListView.Items.Count > 0) {
-                if (WindowListView.SelectedItems.Count == 0)
+            } else if (WindowDataGridView.Rows.Count > 0)
+            {
+                if (WindowDataGridView.SelectedCells.Count == 0)
                 {
-                    WindowListView.SelectedIndices.Add(0);
+                    WindowDataGridView.Rows[0].Selected = true;
                 }
+
                 if (!is_going_up)
                 {
-                    if (WindowListView.SelectedIndices[0] == WindowListView.Items.Count - 1)
+                    // see if we are at the end of the list
+                    if (WindowDataGridView.SelectedRows[0].Index == WindowDataGridView.Rows.Count - 1)
                     {
-                        WindowListView.SelectedIndices.Add(0);
-                    }
-                    else
+                        Debug.WriteLine("Detected end of list");
+                        WindowDataGridView.Rows[0].Selected = true;
+                    } else
                     {
-                        if (hasChangedSelection)
-                            WindowListView.SelectedIndices.Add(WindowListView.SelectedIndices[0] + 1);
-                        else
+                        if(hasChangedSelection)
                         {
-                            WindowListView.SelectedIndices.Add(0);
+                            WindowDataGridView.Rows[WindowDataGridView.SelectedRows[0].Index + 1].Selected = true;
+                        } else
+                        {
+                            WindowDataGridView.Rows[0].Selected = true;
                             hasChangedSelection = true;
                         }
                     }
-                }
-                else
+                } else
                 {
-                    if (WindowListView.SelectedIndices[0] == 0)
+                    if (WindowDataGridView.SelectedRows[0].Index == 0)
                     {
-                        WindowListView.SelectedIndices.Add(WindowListView.Items.Count - 1);
-                    }
-                    else
+                        WindowDataGridView.Rows[WindowDataGridView.Rows.Count - 1].Selected = true;
+                    } else
                     {
-                        WindowListView.SelectedIndices.Add(WindowListView.SelectedIndices[0] - 1);
+                        WindowDataGridView.Rows[WindowDataGridView.SelectedRows[0].Index - 1].Selected = true;
                     }
                 }
             }
-            WindowListView.EnsureVisible(WindowListView.SelectedItems[0].Index);
         }
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -234,11 +229,12 @@ namespace WindowSearcher
         private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
             hasChangedSelection = false;
-            ResetWindowView();
-            if (SearchTextBox.Text == "")
-            {
-                ResetWindowView();
-            }
+            ResetDataGridView();
+            //if (SearchTextBox.Text == "")
+            //{
+            //    ResetWindowView();
+            //    ResetDataGridView();
+            //}
             // resize listbox to fit 10 items
             Resize();
         }
@@ -257,13 +253,13 @@ namespace WindowSearcher
         {
             // get hieght of listvie witem
             int itemHeight = 0;
-            if (WindowListView.Items.Count > 0)
+            if (WindowDataGridView.Rows.Count > 0)
             {
-                itemHeight = WindowListView.GetItemRect(0).Height;
+                itemHeight = WindowDataGridView.RowTemplate.Height;
             }
-            WindowListView.Size = new Size(WindowListView.Size.Width, WindowListView.Items.Count * itemHeight + itemHeight);
-            var height = SearchTextBox.Size.Height + WindowListView.Size.Height ;
-            WindowListView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - 50);
+            WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, WindowDataGridView.Rows.Count * itemHeight + itemHeight);
+            var height = SearchTextBox.Size.Height + WindowDataGridView.Size.Height ;
+            WindowDataGridView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - 50);
             this.Size = new Size(this.Size.Width, height);
         }
 
@@ -272,11 +268,12 @@ namespace WindowSearcher
 
         }
 
-        private void ResetWindowView()
+        private void ResetDataGridView()
         {
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             // loop over all windows
-            WindowListView.Items.Clear();
+            WindowDataGridView.Rows.Clear();
+
             foreach (KeyValuePair<IntPtr, string> window in windows)
             {
                 // if the window name matches the text in the combo box
@@ -287,14 +284,27 @@ namespace WindowSearcher
 
                 if (Regex.IsMatch(window.Value, pattern, RegexOptions.IgnoreCase))
                 {
-
-                    //WindowListView.Items.ContainsKey
-
-                    if (!WindowListView.Items.ContainsKey(window.Value))
+                    Debug.WriteLine("Passed regex: " +  window.Value);
+                    // check if datagridview contains window.Value
+                    bool hasFound = false;
+                    foreach (DataGridViewRow row in WindowDataGridView.Rows)
                     {
-                        // add the window to the listview
-                        WindowListView.Items.Add(window.Value);
-                        
+                        if (row.Cells.Count == 2)
+                        {
+                            string cellValue = row.Cells[1].Value.ToString();
+                            Debug.WriteLine("Cell Value: " + cellValue.ToString());
+                            if (cellValue != null && cellValue.Contains(window.Value))
+                            {
+                                hasFound = true;
+                            }
+                        }
+                    }
+                    
+                    if (!hasFound)
+                    {
+                        var image = GetSmallWindowIcon(window.Key);
+                        WindowDataGridView.Rows.Add(image, window.Value.ToString());
+                        Debug.WriteLine("Added " + window.Value.ToString());
                     }
                 }
             }
@@ -345,7 +355,7 @@ namespace WindowSearcher
                     hIcon = LoadIcon(IntPtr.Zero, (IntPtr)0x7F00/*IDI_APPLICATION*/);
 
                 if (hIcon != IntPtr.Zero)
-                    return new Bitmap(Icon.FromHandle(hIcon).ToBitmap(), 16, 16);
+                    return new Bitmap(System.Drawing.Icon.FromHandle(hIcon).ToBitmap(), 16, 16);
                 else
                     return null;
             }
@@ -478,30 +488,7 @@ namespace WindowSearcher
 
         private void WindoListView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (WindowListView.SelectedItems.Count == 0)
-            {
-                return;
-            }
-            string window_name;
-            if (WindowListView.SelectedItems[0].ToString() == "")
-            {
-                return;
-            }
 
-            window_name = WindowListView.SelectedItems[0].Text;
-
-
-            Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-            foreach (KeyValuePair<IntPtr, string> window in windows)
-            {
-                Debug.WriteLine(window.Value + " + " + window_name);
-                if (window.Value == window_name)
-                {
-                    FocusWindow(window.Key);
-                    Hide();
-                    return;
-                }
-            }
         }
 
         private void WindowListView_SelectedIndexChanged(object sender, EventArgs e)
