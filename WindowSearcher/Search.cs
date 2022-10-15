@@ -116,12 +116,17 @@ namespace WindowSearcher
                         if (SearchTextBox.Text.Trim().StartsWith("/"))
                         {
                             if (SearchTextBox.Text.Trim().Equals("/options")) {
+                                SearchTextBox.Text = "";
                                 Options o = new Options();
                                 o.ShowDialog();
                             } else if(SearchTextBox.Text.Trim().Equals("/exit"))
                             {
+                                SearchTextBox.Text = "";
                                 Application.Exit();
                                 break;
+                            } else
+                            {
+                                MessageBox.Show("Command not found");
                             }
                         }
 

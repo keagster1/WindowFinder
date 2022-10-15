@@ -13,6 +13,7 @@ namespace WindowSearcher
 {
     public partial class Options : Form
     {
+        private bool _isHotKeyChanged = false;
         public Options()
         {
             InitializeComponent();
@@ -25,7 +26,16 @@ namespace WindowSearcher
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default["LaunchOnStartup"] = LaunchOnStartupCheckbox.Checked;
+
+            // check if hotkey was changed
+            if (_isHotKeyChanged)
+            {
+                // if hotkey was changed, unregister old hotkey and register new hotkey
+                HotKeys.UnregisterHotKey(this.Handle, 0);
+                HotKeys.SetHotKey(this.Handle, 0, (uint)HotKeyTextBox.Text.ToUpper().ToCharArray()[0]);
+                Application.Restart();
+            }
+
             Properties.Settings.Default["ConsiderFullScreen"] = ConsiderFullScreenCheckBox.Checked;
 
             
@@ -47,29 +57,31 @@ namespace WindowSearcher
                 MessageBox.Show("You cannot set just a modifier or just a hotkey. Please set both.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Debug.WriteLine("Setting hot key as: " + hotKey + " and modifiers as: " + modifiers);
-            // register 
-            HotKeys.SetHotKey(this.Handle, modifiers, hotKey);
-
-            //Properties.Settings.Default["OpenSearchHotkey"] = HotKeyTextBox.Text;
 
             Properties.Settings.Default.Save();
-
-            if (Properties.Settings.Default["LaunchOnStartup"].ToString().Equals("True"))
+            // register 
+            HotKeys.UnregisterHotKey(this.Handle, 0);
+            HotKeys.SetHotKey(this.Handle, modifiers, hotKey);
+            
+            // check if LaunchOnStartup changed
+            if ((bool)Properties.Settings.Default["LaunchOnStartup"] != LaunchOnStartupCheckbox.Checked)
             {
-                // add to startup
-                Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                key.SetValue("WindowFinder", Application.ExecutablePath.ToString());
+                Properties.Settings.Default["LaunchOnStartup"] = LaunchOnStartupCheckbox.Checked;
+                // if LaunchOnStartup changed, update registry
+                if (LaunchOnStartupCheckbox.Checked)
+                {
+                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    rk.SetValue("WindowSearcher", Application.ExecutablePath.ToString());
+                }
+                else
+                {
+                    Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+                    rk.DeleteValue("WindowSearcher", false);
+                }
+                Properties.Settings.Default.Save();
+                MessageBox.Show("Settings saved! Application will restart to apply changes.");
+                Application.Restart();
             }
-            else
-            {
-                // remove from startup
-                Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-                key.DeleteValue("WindowFinder", false);
-            }
-
-            MessageBox.Show("Settings saved! Please restart the application for changes to take effect.");
-
         }
 
         private void Options_Load(object sender, EventArgs e)
@@ -160,7 +172,9 @@ namespace WindowSearcher
             Debug.WriteLine("Detected" + hotKey.ToString() + " and " + keyModifier);
             Properties.Settings.Default["HotKey"] = (uint)hotKey;
             Properties.Settings.Default["Modifiers"] = (uint)keyModifier;
-            
+            _isHotKeyChanged = true;
+
+
             e.SuppressKeyPress = true;
         }
 
@@ -172,6 +186,11 @@ namespace WindowSearcher
         private void HotKeyTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
