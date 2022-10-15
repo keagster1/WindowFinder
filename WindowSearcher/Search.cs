@@ -34,7 +34,9 @@ namespace WindowSearcher
 
 
             // check if settings has values
-            if ((string)Properties.Settings.Default["HotKey"].ToString() != "" && (string)Properties.Settings.Default["Modifiers"].ToString() == "")
+            var settings = Properties.Settings.Default;
+
+            if (settings.HotKey != 0 && settings.Modifiers != 0)
             {
                 RegisterHotKey(this.Handle, id, (uint)Properties.Settings.Default["Modifiers"], (uint)Properties.Settings.Default["HotKey"]);
                 Debug.WriteLine("Registering: " + id + " " + keyModifier + " " + key);
@@ -301,7 +303,6 @@ namespace WindowSearcher
 
                 if (Regex.IsMatch(window.Value, pattern, RegexOptions.IgnoreCase))
                 {
-                    Debug.WriteLine("Passed regex: " +  window.Value);
                     // check if datagridview contains window.Value
                     bool hasFound = false;
                     foreach (DataGridViewRow row in WindowDataGridView.Rows)
@@ -309,7 +310,6 @@ namespace WindowSearcher
                         if (row.Cells.Count == 2)
                         {
                             string cellValue = row.Cells[1].Value.ToString();
-                            Debug.WriteLine("Cell Value: " + cellValue.ToString());
                             if (cellValue != null && cellValue.Contains(window.Value))
                             {
                                 hasFound = true;
@@ -321,7 +321,6 @@ namespace WindowSearcher
                     {
                         var image = GetSmallWindowIcon(window.Key);
                         WindowDataGridView.Rows.Add(image, window.Value.ToString());
-                        Debug.WriteLine("Added " + window.Value.ToString());
                     }
                 }
             }

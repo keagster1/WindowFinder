@@ -30,6 +30,9 @@ Effortlessly search for and show any open window on your computer!
 - Use Enter or double click to bring that window into focus
 - Press Escape to hide the search window
 
+### Options
+
+
 ### TODO:
 - MAKE OR GET BETTER ICON
 - Add ability to pin windows as favorites
