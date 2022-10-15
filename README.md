@@ -29,10 +29,9 @@ mouse to select the window you want to show and either press enter or double cli
 - Press Escape to hide the search window
 
 ### TODO:
-- Add Icons to search list
-- Dark mode
 - Refactor
     - Break code into functions
     - Remove unneeded code
     - Fix warnings
     - Add error handling
+- Dark mode

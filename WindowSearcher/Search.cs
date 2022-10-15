@@ -62,6 +62,8 @@ namespace WindowSearcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            WindowDataGridView.MaximumSize = new Size(WindowDataGridView.Size.Width, this.MaximumSize.Height - SearchTextBox.Size.Height);
+
             Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in w)
             {
@@ -70,6 +72,7 @@ namespace WindowSearcher
             WindowDataGridView.CurrentCell.Selected = false;
 
             ResizeListAndForm();
+
         }
 
         public void addWindowToDataGrid(KeyValuePair<IntPtr, string> w)
@@ -263,23 +266,14 @@ namespace WindowSearcher
             
             if (WindowDataGridView.Rows.Count > 0)
             {
-                itemHeight = WindowDataGridView.RowTemplate.Height;
-                if (WindowDataGridView.Rows.Count == 1)
-                {
-                    WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, (WindowDataGridView.Rows.Count * itemHeight));
-                } else
-                {
-                    WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, (WindowDataGridView.Rows.Count * itemHeight) - itemHeight);
-                }
+                WindowDataGridView.Height = WindowDataGridView.Rows.GetRowsHeight(DataGridViewElementStates.None);
             } else
             {
                 WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, 0);
             }
-
    
-            var height = SearchTextBox.Size.Height + WindowDataGridView.Size.Height ;
-            WindowDataGridView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - itemHeight);
-            this.Size = new Size(this.Size.Width, height);
+            var height = SearchTextBox.Size.Height + WindowDataGridView.Size.Height;
+            this.Size = new Size(this.Size.Width, height+1);
         }
 
         private void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
