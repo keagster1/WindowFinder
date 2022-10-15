@@ -61,7 +61,7 @@ namespace WindowSearcher
             Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             foreach (KeyValuePair<IntPtr, string> window in w)
             {
-                WindowListBox.Items.Add(window.Value);
+                WindowListView.Items.Add(window.Value);
                 //Debug.WriteLine("Added " + window.Value);
             }
 
@@ -80,26 +80,28 @@ namespace WindowSearcher
                 switch ((Keys)msgVal)
                 { 
                     case Keys.Up:
-                        MoveSelectedIndex(true);
+                        MoveViewSelectedIndex(true);
                         break;
 
                     case Keys.Down:
-                        MoveSelectedIndex(false);
+                        MoveViewSelectedIndex(false);
                         break;
                     case Keys.Escape:
                         if ((bool)Properties.Settings.Default["HideSearchWithEscape"])
                         {
                             this.Hide();
+                            m.Result = (IntPtr)1;
+                            return base.ProcessKeyPreview(ref m);
                         }
                         else
                         {
                             SearchTextBox.Text = "";
-                            ResetWindowList();
+                            ResetWindowView();
                             // resize listbox to fit 10 items
                             Resize();
-                            return true;
+                            m.Result = (IntPtr)1;
+                            return base.ProcessKeyPreview(ref m);
                         }
-                        break;
                     case Keys.Enter:
 
                         // get list of open windows
@@ -110,7 +112,6 @@ namespace WindowSearcher
                             if (SearchTextBox.Text.Trim().Equals("/options")) {
                                 Options o = new Options();
                                 o.ShowDialog();
-                                break;
                             } else if(SearchTextBox.Text.Trim().Equals("/exit"))
                             {
                                 Application.Exit();
@@ -121,12 +122,18 @@ namespace WindowSearcher
                         // find handle for text
                         foreach (KeyValuePair<IntPtr, string> window in WindowList)
                         {
-                            if (window.Value == WindowListBox.SelectedItem.ToString())
+                            if (WindowListView.SelectedItems.Count == 0)
+                            {
+                                break;
+                            }
+                            if (window.Value.Equals(WindowListView.SelectedItems[0].Text))
                             {
 
                                 // set focus to window
                                 FocusWindow(window.Key);
-                                break;
+                                // supress key event
+                                m.Result = (IntPtr)1;
+                                return true;
                             }
                         }
 
@@ -139,44 +146,51 @@ namespace WindowSearcher
 
 
         public bool hasChangedSelection = false;
-        public void MoveSelectedIndex(bool is_going_up)
+        
+        public void MoveViewSelectedIndex(bool is_going_up)
         {
             // check if anything is selected
-            if (WindowListBox.SelectedItems.Count == 0)
-            {
-                if (WindowListBox.Items.Count != 0)
-                {
-                    WindowListBox.SelectedIndex = 0;
-                    // increment selected item in windowlistview
 
+            if (WindowListView.Items.Count == 0)
+            {
+                if (WindowListView.SelectedItems.Count != 0)
+                {
+                    //WindowListView.SelectedIndices.Add(0);
+                    WindowListView.Clear();
                 }
             }
-            if (!is_going_up)
-            {
-                if (WindowListBox.SelectedIndex == WindowListBox.Items.Count - 1)
+            else if (WindowListView.Items.Count > 0) {
+                if (WindowListView.SelectedItems.Count == 0)
                 {
-                    WindowListBox.SelectedIndex = 0;
+                    WindowListView.SelectedIndices.Add(0);
                 }
-                else
+                if (!is_going_up)
                 {
-                    if (hasChangedSelection)
-                        WindowListBox.SelectedIndex += 1;
+                    if (WindowListView.SelectedIndices[0] == WindowListView.Items.Count - 1)
+                    {
+                        WindowListView.SelectedIndices.Add(0);
+                    }
                     else
                     {
-                        WindowListBox.SelectedIndex = 0;
-                        hasChangedSelection = true;
+                        if (hasChangedSelection)
+                            WindowListView.SelectedIndices.Add(WindowListView.SelectedIndices[0] + 1);
+                        else
+                        {
+                            WindowListView.SelectedIndices.Add(0);
+                            hasChangedSelection = true;
+                        }
                     }
-                }
-            }
-            else
-            {
-                if (WindowListBox.SelectedIndex == 0)
-                {
-                    WindowListBox.SelectedIndex = WindowListBox.Items.Count - 1;
                 }
                 else
                 {
-                    WindowListBox.SelectedIndex -= 1;
+                    if (WindowListView.SelectedIndices[0] == 0)
+                    {
+                        WindowListView.SelectedIndices.Add(WindowListView.Items.Count - 1);
+                    }
+                    else
+                    {
+                        WindowListView.SelectedIndices.Add(WindowListView.SelectedIndices[0] - 1);
+                    }
                 }
             }
         }
@@ -204,21 +218,11 @@ namespace WindowSearcher
         private void SearchTextBox_TextChanged(object sender, EventArgs e)
         {
             hasChangedSelection = false;
+            ResetWindowView();
             if (SearchTextBox.Text == "")
             {
-                // reset the list to all open windows
-                WindowListBox.Items.Clear();
-                Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-                foreach (KeyValuePair<IntPtr, string> window in w)
-                {
-                    WindowListBox.Items.Add(window.Value);
-                    //Debug.WriteLine("Added " + window.Value);
-                }
-                //Debug.WriteLine("reset");
-                return;
+                ResetWindowView();
             }
-
-            ResetWindowList();
             // resize listbox to fit 10 items
             Resize();
         }
@@ -235,8 +239,16 @@ namespace WindowSearcher
 
         public void Resize()
         {
-            WindowListBox.Size = new Size(WindowListBox.Size.Width, WindowListBox.Items.Count * 30);
-            this.Size = new Size(this.Size.Width, WindowListBox.Size.Height + 50);
+            // get hieght of listvie witem
+            int itemHeight = 0;
+            if (WindowListView.Items.Count > 0)
+            {
+                itemHeight = WindowListView.GetItemRect(0).Height;
+            }
+            WindowListView.Size = new Size(WindowListView.Size.Width, WindowListView.Items.Count * itemHeight + itemHeight);
+            var height = SearchTextBox.Size.Height + WindowListView.Size.Height ;
+
+            this.Size = new Size(this.Size.Width, height);
         }
 
         private void SearchTextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -244,10 +256,11 @@ namespace WindowSearcher
 
         }
 
-        private void ResetWindowList()
+        private void ResetWindowView()
         {
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
             // loop over all windows
+            WindowListView.Items.Clear();
             foreach (KeyValuePair<IntPtr, string> window in windows)
             {
                 // if the window name matches the text in the combo box
@@ -259,18 +272,70 @@ namespace WindowSearcher
                 if (Regex.IsMatch(window.Value, pattern, RegexOptions.IgnoreCase))
                 {
 
-                    if (!WindowListBox.Items.Contains(window.Value))
+                    //WindowListView.Items.ContainsKey
+
+                    if (!WindowListView.Items.ContainsKey(window.Value))
                     {
-                        // add the window to the combo box
-                        WindowListBox.Items.Add(window.Value);
+                        // add the window to the listview
+                        WindowListView.Items.Add(window.Value);
+                        
                     }
                 }
-                else
-                {
-                    // hide the item in the combo box
-                    WindowListBox.Items.Remove(window.Value);
-                }
+            }
+        }
 
+        [DllImport("user32.dll")]
+        static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLong")]
+        static extern uint GetClassLong32(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
+        static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
+
+        /// <summary>
+        /// 64 bit version maybe loses significant 64-bit specific information
+        /// </summary>
+        static IntPtr GetClassLongPtr(IntPtr hWnd, int nIndex)
+        {
+            if (IntPtr.Size == 4)
+                return new IntPtr((long)GetClassLong32(hWnd, nIndex));
+            else
+                return GetClassLong64(hWnd, nIndex);
+        }
+
+
+        
+
+        public static Image GetSmallWindowIcon(IntPtr hWnd)
+        {
+            uint WM_GETICON = 0x007f;
+            IntPtr ICON_SMALL2 = new IntPtr(2);
+            IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+            int GCL_HICON = -14;
+            try
+            {
+                IntPtr hIcon = default(IntPtr);
+
+                hIcon = SendMessage(hWnd, WM_GETICON, ICON_SMALL2, IntPtr.Zero);
+
+                if (hIcon == IntPtr.Zero)
+                    hIcon = GetClassLongPtr(hWnd, GCL_HICON);
+
+                if (hIcon == IntPtr.Zero)
+                    hIcon = LoadIcon(IntPtr.Zero, (IntPtr)0x7F00/*IDI_APPLICATION*/);
+
+                if (hIcon != IntPtr.Zero)
+                    return new Bitmap(Icon.FromHandle(hIcon).ToBitmap(), 16, 16);
+                else
+                    return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -296,13 +361,13 @@ namespace WindowSearcher
                 this.WindowState = FormWindowState.Normal;
                 Search.SetForegroundWindow(Handle);
 
-                WindowListBox.Items.Clear();
-                Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-                foreach (KeyValuePair<IntPtr, string> window in w)
-                {
-                    WindowListBox.Items.Add(window.Value);
-                }
-                SearchTextBox.Focus();
+                //WindowListBox.Items.Clear();
+                //Dictionary<IntPtr, string> w = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
+                //foreach (KeyValuePair<IntPtr, string> window in w)
+                //{
+                //    WindowListBox.Items.Add(window.Value);
+                //}
+                //SearchTextBox.Focus();
                 hotkey.Result = (IntPtr)1;
             }
             const int WM_ACTIVATEAPP = 0x001C;
@@ -327,34 +392,6 @@ namespace WindowSearcher
             Application.Exit();
         }
 
-        private void WindowListBox_MouseDoubleClick_1(object sender, MouseEventArgs e)
-        {
-            if (WindowListBox.SelectedItems.Count == 0)
-            {
-                return;
-            }
-            string window_name;
-            if (WindowListBox.SelectedItems[0].ToString() == "")
-            {
-                return;
-            }
-
-
-            window_name = WindowListBox.SelectedItems[0].ToString();
-
-
-            Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
-            foreach (KeyValuePair<IntPtr, string> window in windows)
-            {
-                if (window.Value == window_name)
-                {
-                    FocusWindow(window.Key);
-                    this.Hide();
-                    return;
-                }
-            }
-        }
-
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Options options = new Options();
@@ -363,6 +400,12 @@ namespace WindowSearcher
 
         private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                return;
+            }
             // check if ctrl+o is pressed
             if (e.Control && e.KeyCode == Keys.O)
             {
@@ -371,6 +414,42 @@ namespace WindowSearcher
                 options.Show();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void WindoListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Debug.WriteLine("Got to step 0");
+            if (WindowListView.SelectedItems.Count == 0)
+            {
+                return;
+            }
+            string window_name;
+            Debug.WriteLine("Got to step 1");
+            if (WindowListView.SelectedItems[0].ToString() == "")
+            {
+                return;
+            }
+            Debug.WriteLine("Got to step 2");
+
+            window_name = WindowListView.SelectedItems[0].Text;
+
+
+            Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
+            foreach (KeyValuePair<IntPtr, string> window in windows)
+            {
+                Debug.WriteLine(window.Value + " + " + window_name);
+                if (window.Value == window_name)
+                {
+                    FocusWindow(window.Key);
+                    Hide();
+                    return;
+                }
+            }
+        }
+
+        private void WindowListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

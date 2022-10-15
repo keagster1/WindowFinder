@@ -37,7 +37,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.WindowListBox = new System.Windows.Forms.ListBox();
+            this.WindowTextCol = new System.Windows.Forms.ColumnHeader();
+            this.WindowListView = new System.Windows.Forms.ListView();
             this.TaskBarMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,24 +100,34 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // WindowListBox
+            // WindowTextCol
             // 
-            this.WindowListBox.FormattingEnabled = true;
-            this.WindowListBox.ItemHeight = 20;
-            this.WindowListBox.Location = new System.Drawing.Point(0, 49);
-            this.WindowListBox.MaximumSize = new System.Drawing.Size(715, 358);
-            this.WindowListBox.MinimumSize = new System.Drawing.Size(715, 0);
-            this.WindowListBox.Name = "WindowListBox";
-            this.WindowListBox.Size = new System.Drawing.Size(715, 304);
-            this.WindowListBox.TabIndex = 1;
-            this.WindowListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindowListBox_MouseDoubleClick_1);
+            this.WindowTextCol.Text = "Window Name";
+            this.WindowTextCol.Width = 500;
+            // 
+            // WindowListView
+            // 
+            this.WindowListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.WindowTextCol});
+            this.WindowListView.FullRowSelect = true;
+            this.WindowListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.WindowListView.Location = new System.Drawing.Point(0, 49);
+            this.WindowListView.MultiSelect = false;
+            this.WindowListView.Name = "WindowListView";
+            this.WindowListView.ShowGroups = false;
+            this.WindowListView.Size = new System.Drawing.Size(715, 304);
+            this.WindowListView.TabIndex = 2;
+            this.WindowListView.UseCompatibleStateImageBehavior = false;
+            this.WindowListView.View = System.Windows.Forms.View.List;
+            this.WindowListView.SelectedIndexChanged += new System.EventHandler(this.WindowListView_SelectedIndexChanged);
+            this.WindowListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindoListView_MouseDoubleClick);
             // 
             // Search
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(715, 358);
-            this.Controls.Add(this.WindowListBox);
+            this.Controls.Add(this.WindowListView);
             this.Controls.Add(this.SearchTextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
@@ -140,7 +151,8 @@
         private ToolStripMenuItem showToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private ListBox WindowListBox;
         private ToolStripMenuItem settingsToolStripMenuItem;
+        private ColumnHeader WindowTextCol;
+        private ListView WindowListView;
     }
 }
