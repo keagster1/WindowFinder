@@ -504,15 +504,32 @@ namespace WindowSearcher
                 e.SuppressKeyPress = true;
             }
         }
-
-        private void WindoListView_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void WindowDataGridView_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            if (WindowDataGridView.SelectedRows.Count == 0)
+            {
+                return;
+            }
+            string window_name;
+            if (WindowDataGridView.SelectedRows[0].Cells[1].ToString() == "")
+            {
+                return;
+            }
 
-        }
+            window_name = WindowDataGridView.SelectedRows[0].Cells[1].Value.ToString();
 
-        private void WindowListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
 
+            Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)OpenWindowGetter.GetOpenWindows();
+            foreach (KeyValuePair<IntPtr, string> window in windows)
+            {
+                Debug.WriteLine(window.Value + " + " + window_name);
+                if (window.Value == window_name)
+                {
+                    FocusWindow(window.Key);
+                    Hide();
+                    return;
+                }
+            }
         }
     }
 

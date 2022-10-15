@@ -130,6 +130,7 @@
             this.WindowDataGridView.ShowRowErrors = false;
             this.WindowDataGridView.Size = new System.Drawing.Size(715, 304);
             this.WindowDataGridView.TabIndex = 3;
+            this.WindowDataGridView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WindowDataGridView_MouseDoubleClick);
             // 
             // Icon
             // 
