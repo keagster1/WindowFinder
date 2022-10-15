@@ -400,6 +400,31 @@ namespace WindowSearcher
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowRect(IntPtr hwnd, out RECT rc);
 
+        [DllImport("user32.dll")]
+        static extern int GetClassName(int hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        public bool IsDesktopActive()
+        {
+            const int maxChars = 256;
+            int handle = 0;
+            StringBuilder className = new StringBuilder(maxChars);
+
+            handle = (int)GetForegroundWindow();
+
+            if (GetClassName(handle, className, maxChars) > 0)
+            {
+                string cName = className.ToString();
+                if (cName == "Progman" || cName == "WorkerW")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
 
         private int WM_HOTKEY = 0x0312;
         protected override void WndProc(ref Message hotkey)
@@ -421,13 +446,16 @@ namespace WindowSearcher
                     if (!hWnd.Equals(IntPtr.Zero))
                     {
                         //Check we haven't picked up the desktop or the shell
-                        if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle)))
+                        if (!IsDesktopActive() && (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))))
                         {
                             GetWindowRect(hWnd, out appBounds);
                             //determine if window is fullscreen
                             screenBounds = Screen.FromHandle(hWnd).Bounds;
+
                             if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width)
                             {
+                                Debug.WriteLine("Detected full screen app with HWND: " + hWnd);
+                                hotkey.Result = (IntPtr)1;
                                 return;
                             }
                         }
@@ -556,15 +584,16 @@ namespace WindowSearcher
 
         // import win32
 
+        public static int HResult { get; set; }
 
         [DllImport("USER32.DLL")]
         private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
 
         [DllImport("USER32.DLL")]
-        private static extern int GetWindowText(HWND hWnd, StringBuilder lpString, int nMaxCount);
+        public static extern int GetWindowText(HWND hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("USER32.DLL")]
-        private static extern int GetWindowTextLength(HWND hWnd);
+        public static extern int GetWindowTextLength(HWND hWnd);
 
         [DllImport("USER32.DLL")]
         private static extern bool IsWindowVisible(HWND hWnd);
