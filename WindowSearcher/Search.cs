@@ -69,7 +69,7 @@ namespace WindowSearcher
             }
             WindowDataGridView.CurrentCell.Selected = false;
 
-            Resize();
+            ResizeListAndForm();
         }
 
         public void addWindowToDataGrid(KeyValuePair<IntPtr, string> w)
@@ -105,7 +105,7 @@ namespace WindowSearcher
                             SearchTextBox.Text = "";
                             ResetDataGridView();
                             // resize listbox to fit 10 items
-                            Resize();
+                            ResizeListAndForm();
                             m.Result = (IntPtr)1;
                             return base.ProcessKeyPreview(ref m);
                         }
@@ -156,7 +156,19 @@ namespace WindowSearcher
             return base.ProcessKeyPreview(ref m);
         }
 
+        private void scrollGrid()
+        {
+            int halfWay = (WindowDataGridView.DisplayedRowCount(false) / 2);
+            if (WindowDataGridView.FirstDisplayedScrollingRowIndex + halfWay > WindowDataGridView.SelectedRows[0].Index ||
+                (WindowDataGridView.FirstDisplayedScrollingRowIndex + WindowDataGridView.DisplayedRowCount(false) - halfWay) <= WindowDataGridView.SelectedRows[0].Index)
+            {
+                int targetRow = WindowDataGridView.SelectedRows[0].Index;
 
+                targetRow = Math.Max(targetRow - halfWay, 0);
+                WindowDataGridView.FirstDisplayedScrollingRowIndex = targetRow;
+
+            }
+        }
         public bool hasChangedSelection = false;
         
         public void MoveViewSelectedIndexDataGrid(bool is_going_up)
@@ -204,7 +216,8 @@ namespace WindowSearcher
                     }
                 }
             }
-            WindowDataGridView.FirstDisplayedScrollingRowIndex = WindowDataGridView.SelectedRows[0].Index;
+            //WindowDataGridView.FirstDisplayedScrollingRowIndex = WindowDataGridView.SelectedRows[0].Index;
+            scrollGrid();
         }
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -231,13 +244,7 @@ namespace WindowSearcher
         {
             hasChangedSelection = false;
             ResetDataGridView();
-            //if (SearchTextBox.Text == "")
-            //{
-            //    ResetWindowView();
-            //    ResetDataGridView();
-            //}
-            // resize listbox to fit 10 items
-            Resize();
+            ResizeListAndForm();
         }
 
         public bool ListViewContainsString(ListView lv, string s)
@@ -250,17 +257,28 @@ namespace WindowSearcher
             return false;
         }
 
-        public void Resize()
+        public void ResizeListAndForm()
         {
-            // get hieght of listvie witem
             int itemHeight = 0;
+            
             if (WindowDataGridView.Rows.Count > 0)
             {
                 itemHeight = WindowDataGridView.RowTemplate.Height;
+                if (WindowDataGridView.Rows.Count == 1)
+                {
+                    WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, (WindowDataGridView.Rows.Count * itemHeight));
+                } else
+                {
+                    WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, (WindowDataGridView.Rows.Count * itemHeight) - itemHeight);
+                }
+            } else
+            {
+                WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, 0);
             }
-            WindowDataGridView.Size = new Size(WindowDataGridView.Size.Width, WindowDataGridView.Rows.Count * itemHeight + itemHeight);
+
+   
             var height = SearchTextBox.Size.Height + WindowDataGridView.Size.Height ;
-            WindowDataGridView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - 50);
+            WindowDataGridView.MaximumSize = new Size(this.Size.Width, this.MaximumSize.Height - itemHeight);
             this.Size = new Size(this.Size.Width, height);
         }
 
