@@ -204,6 +204,7 @@ namespace WindowSearcher
                     }
                 }
             }
+            WindowDataGridView.FirstDisplayedScrollingRowIndex = WindowDataGridView.SelectedRows[0].Index;
         }
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
