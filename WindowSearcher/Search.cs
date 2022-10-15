@@ -130,7 +130,7 @@ namespace WindowSearcher
                             } else if(SearchTextBox.Text.Trim().Equals("/exit"))
                             {
                                 SearchTextBox.Text = "";
-                                Application.Exit();
+                                handleExit();
                                 break;
                             } else
                             {
@@ -504,6 +504,17 @@ namespace WindowSearcher
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            handleExit();
+        }
+
+        private void handleExit()
+        {
+            // Unregister all hotkeys.
+            UnregisterHotKey(this.Handle, 0);
+
+            // Close notify
+            WindowFinderNotify.Visible = false;
+
             Application.Exit();
         }
 
