@@ -19,6 +19,8 @@ namespace WindowSearcher
     public partial class Search : Form
     {
         public Dictionary<IntPtr, string> WindowList;
+        private IntPtr desktopHandle; //Window handle for the desktop
+        private IntPtr shellHandle; //Window handle for the shell
         public Search()
         {
             InitializeComponent();
@@ -26,7 +28,9 @@ namespace WindowSearcher
             int id = 0;
             uint keyModifier = (int)KeyModifier.Alt;
             uint key = (uint)Keys.F1.GetHashCode();
-            
+
+            desktopHandle = GetDesktopWindow();
+            shellHandle = GetShellWindow();
 
 
             // check if settings has values
@@ -356,6 +360,24 @@ namespace WindowSearcher
             return String.Format("0x{0:X}", value);
         }
 
+        public struct RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetDesktopWindow();
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetShellWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowRect(IntPtr hwnd, out RECT rc);
+
+
         private int WM_HOTKEY = 0x0312;
         protected override void WndProc(ref Message hotkey)
         {
@@ -363,6 +385,32 @@ namespace WindowSearcher
 
             if (hotkey.Msg == WM_HOTKEY)
             {
+                // if fullscreen check is on
+                if ((bool)Properties.Settings.Default["ConsiderFullScreen"] == true)
+                {
+                    //bool runningFullScreen = false;
+                    RECT appBounds;
+                    Rectangle screenBounds;
+                    IntPtr hWnd;
+
+                    // check if user is in a fullscreen application
+                    hWnd = GetForegroundWindow();
+                    if (!hWnd.Equals(IntPtr.Zero))
+                    {
+                        //Check we haven't picked up the desktop or the shell
+                        if (!(hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle)))
+                        {
+                            GetWindowRect(hWnd, out appBounds);
+                            //determine if window is fullscreen
+                            screenBounds = Screen.FromHandle(hWnd).Bounds;
+                            if ((appBounds.Bottom - appBounds.Top) == screenBounds.Height && (appBounds.Right - appBounds.Left) == screenBounds.Width)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 Keys key = (Keys)(((int)hotkey.LParam >> 16) & 0xFFFF);                  // The key of the hotkey that was pressed.
                 KeyModifier modifier = (KeyModifier)((int)hotkey.LParam & 0xFFFF);       // The modifier of the hotkey that was pressed.
                 int id = hotkey.WParam.ToInt32();

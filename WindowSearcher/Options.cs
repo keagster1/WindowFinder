@@ -30,38 +30,29 @@ namespace WindowSearcher
             // check if hotkey was changed
             if (_isHotKeyChanged)
             {
-                // if hotkey was changed, unregister old hotkey and register new hotkey
-                HotKeys.UnregisterHotKey(this.Handle, 0);
-                HotKeys.SetHotKey(this.Handle, 0, (uint)HotKeyTextBox.Text.ToUpper().ToCharArray()[0]);
-                Application.Restart();
+                uint hotKey = (uint)Properties.Settings.Default["HotKey"];
+                uint modifiers = (uint)Properties.Settings.Default["Modifiers"];
+
+                if (hotKey != 0)
+                {
+                    Properties.Settings.Default["HotKey"] = hotKey;
+                    Properties.Settings.Default["Modifiers"] = modifiers;
+                    HotKeyTextBox.Enabled = false;
+                    // if hotkey was changed, unregister old hotkey and register new hotkey
+                    HotKeys.UnregisterHotKey(this.Handle, 0);
+                    HotKeys.SetHotKey(this.Handle, 0, (uint)HotKeyTextBox.Text.ToUpper().ToCharArray()[0]);
+                }
+                else
+                {
+                    MessageBox.Show("You cannot set just a modifier or just a hotkey. Please set both.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             Properties.Settings.Default["ConsiderFullScreen"] = ConsiderFullScreenCheckBox.Checked;
-
-            
             Properties.Settings.Default["HideSearchWithEscape"] = HideWithEscRadioButton.Checked;
-            
-
             Properties.Settings.Default["HideOnFocusLost"] = HideOnFocusLostCheckbox.Checked;
 
-            uint hotKey = (uint)Properties.Settings.Default["HotKey"];
-            uint modifiers = (uint)Properties.Settings.Default["Modifiers"];
-            
-            if (hotKey != 0)
-            {
-                Properties.Settings.Default["HotKey"] = hotKey;
-                Properties.Settings.Default["Modifiers"] = modifiers;
-                HotKeyTextBox.Enabled = false;
-            } else
-            {
-                MessageBox.Show("You cannot set just a modifier or just a hotkey. Please set both.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            Properties.Settings.Default.Save();
-            // register 
-            HotKeys.UnregisterHotKey(this.Handle, 0);
-            HotKeys.SetHotKey(this.Handle, modifiers, hotKey);
             
             // check if LaunchOnStartup changed
             if ((bool)Properties.Settings.Default["LaunchOnStartup"] != LaunchOnStartupCheckbox.Checked)
@@ -78,10 +69,10 @@ namespace WindowSearcher
                     Microsoft.Win32.RegistryKey rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     rk.DeleteValue("WindowSearcher", false);
                 }
-                Properties.Settings.Default.Save();
-                MessageBox.Show("Settings saved! Application will restart to apply changes.");
-                Application.Restart();
             }
+            Properties.Settings.Default.Save();
+            MessageBox.Show("Settings saved! Application will restart to apply changes.");
+            Application.Restart();
         }
 
         private void Options_Load(object sender, EventArgs e)
