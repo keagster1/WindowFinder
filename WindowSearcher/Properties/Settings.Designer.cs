@@ -73,7 +73,6 @@ namespace WindowSearcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public uint HotKey {
             get {
                 return ((uint)(this["HotKey"]));
@@ -85,7 +84,6 @@ namespace WindowSearcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("112")]
         public uint Modifiers {
             get {
                 return ((uint)(this["Modifiers"]));

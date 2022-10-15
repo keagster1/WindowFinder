@@ -34,7 +34,7 @@ namespace WindowSearcher
 
 
             // check if settings has values
-            if ((uint)Properties.Settings.Default["HotKey"] > 0 && (uint)Properties.Settings.Default["Modifiers"] > 0)
+            if ((string)Properties.Settings.Default["HotKey"].ToString() != "" && (string)Properties.Settings.Default["Modifiers"].ToString() == "")
             {
                 RegisterHotKey(this.Handle, id, (uint)Properties.Settings.Default["Modifiers"], (uint)Properties.Settings.Default["HotKey"]);
                 Debug.WriteLine("Registering: " + id + " " + keyModifier + " " + key);
@@ -42,6 +42,10 @@ namespace WindowSearcher
             {
                 RegisterHotKey(this.Handle, id, keyModifier, key);
                 Debug.WriteLine("Registering ALT + F1 as: " + id + " " + keyModifier + " " + key);
+                Properties.Settings.Default["HotKey"] = key;
+                Properties.Settings.Default["Modifiers"] = keyModifier;
+                Properties.Settings.Default.Save();
+
             }
         }
 
@@ -603,4 +607,3 @@ namespace WindowSearcher
 
     }
 }
-

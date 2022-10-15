@@ -15,10 +15,10 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="HotKey" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Modifiers" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">112</Value>
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
