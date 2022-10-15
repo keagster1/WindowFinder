@@ -65,8 +65,7 @@
             this.HotKeyTextBox.Name = "HotKeyTextBox";
             this.HotKeyTextBox.Size = new System.Drawing.Size(125, 27);
             this.HotKeyTextBox.TabIndex = 1;
-            this.HotKeyTextBox.TextChanged += new System.EventHandler(this.HotKeyTextBox_TextChanged);
-            this.HotKeyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.HotKeyTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HotKeyTextBox_KeyDown);
             // 
             // label1
             // 
@@ -86,7 +85,6 @@
             this.ConsiderFullScreenCheckBox.TabIndex = 3;
             this.ConsiderFullScreenCheckBox.Text = "Don\'t show search box when using Full Screen application";
             this.ConsiderFullScreenCheckBox.UseVisualStyleBackColor = true;
-            this.ConsiderFullScreenCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // HideOnFocusLostCheckbox
             // 
