@@ -320,7 +320,7 @@ namespace WindowFinder
             // the window and forcibly show it.
             if (hWnd != IntPtr.Zero)
             {
-                ShowWindow(hWnd, 5);
+                ShowWindow(hWnd, 1);
                 SetForegroundWindow(hWnd);
             }
         }
