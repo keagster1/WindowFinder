@@ -545,7 +545,8 @@ namespace WindowFinder
             UnregisterHotKey(this.Handle, 0);
 
             // Close notify
-            WindowFinderNotify.Visible = false;
+            WindowFinderNotify.Icon.Dispose();
+            WindowFinderNotify.Dispose();
 
             // Finally exit
             Application.Exit();
