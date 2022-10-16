@@ -7,9 +7,9 @@ Effortlessly search for and show any open window on your computer!
 <img src="gifs/WindowFinderMainDemo.gif" data-canonical-src="gifs/WindowFinderMainDemo.gif.gif" width="500" height="500" />
 
 ### Features:
- Search Open Windows across all Virtual Desktops!
- Set global hotkey to bring up search box or use Task Tray Icon
- Options to customize your experience
+ - Search Open Windows across all Virtual Desktops!
+ - Set global hotkey to bring up search box or use Task Tray Icon
+ - Options to customize your experience
 
 ### Installation
 1. Download from [here]
