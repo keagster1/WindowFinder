@@ -31,8 +31,14 @@ Can be opened with `CTRL+O` (while Search has focus) or with `/options`
 
 <img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="500" height="500" />
 
+### Updating
+1. Uninstall current WindowFinder installation
+2. Download new version
+3. Run installer
+
 ---
 ### TODO:
+- Bug: If you select a window that's docked, it has a decent chance of resizing the window.
 - MAKE OR GET BETTER ICON
 - Add ability to pin windows as favorites
     - Will add these to the top of the list everytime
