@@ -4,6 +4,10 @@ namespace WindowFinder
 {
     public partial class Options : Form
     {
+        private bool _isHotKeyChanged = false;
+        private int keyModifier = 0;
+        private uint hotKey = 0;
+
         private enum KeyModifier
         {
             None = 0,
@@ -12,22 +16,19 @@ namespace WindowFinder
             Shift = 4,
             WinKey = 8
         }
-        
-        private bool _isHotKeyChanged = false;
 
-        private int keyModifier = 0;
-        private uint hotKey = 0;
-        public Options()
-        {
-            InitializeComponent();
-        }
-        
+        // Win imports
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk); //handle, Id of hotkey, modifier (e.g ALT + DEL), hotkey key
         [DllImport("user32.dll")]
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+       
+        public Options()
+        {
+            InitializeComponent();
+        }
 
-
+        // wrapper for Win API calls related to setting the global hotkey
         public static void SetHotKey(IntPtr hWnd, uint modifiers, uint keyHashCode)
         {
             UnregisterHotKey(hWnd, 0);
@@ -42,8 +43,11 @@ namespace WindowFinder
             {
                 if (hotKey != 0)
                 {
+                    // get key code/modifiers
                     Properties.Settings.Default["HotKey"] = hotKey;
                     Properties.Settings.Default["Modifiers"] = (uint)keyModifier;
+
+                    // disable hotkey input for saftey
                     HotKeyTextBox.Enabled = false;
                     
                     // if hotkey was changed, unregister old hotkey and register new hotkey
@@ -57,6 +61,7 @@ namespace WindowFinder
                 }
             }
 
+            // Set settings to component states
             Properties.Settings.Default["ConsiderFullScreen"] = ConsiderFullScreenCheckBox.Checked;
             Properties.Settings.Default["HideSearchWithEscape"] = HideWithEscRadioButton.Checked;
             Properties.Settings.Default["HideOnFocusLost"] = HideOnFocusLostCheckbox.Checked;
@@ -69,7 +74,7 @@ namespace WindowFinder
                 // if LaunchOnStartup changed, update registry
                 if (LaunchOnStartupCheckbox.Checked)
                 {
-                    
+                    // Try to get Registry Key used for Startup Applications
                     Microsoft.Win32.RegistryKey? rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     if (rk == null)
                     {
@@ -77,12 +82,13 @@ namespace WindowFinder
                     }
                     else
                     {
+                        // Set Registry Key
                         rk.SetValue("WindowFinder", Application.ExecutablePath.ToString());
                     }
-                
                 }
                 else
                 {
+                    // Same as above but only delete
                     Microsoft.Win32.RegistryKey? rk = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
                     if (rk != null)
                     {
@@ -90,48 +96,54 @@ namespace WindowFinder
                     }                    
                 }
             }
+
+            // Actually save the settings
             Properties.Settings.Default.Save();
             MessageBox.Show("Settings saved! Application will restart to apply changes.");
+
+            // Restart is needed for some settings to take effect
             Application.Restart();
         }
 
         private void Options_Load(object sender, EventArgs e)
         {
+            // Set state of options to current settings
             LaunchOnStartupCheckbox.Checked = (bool)Properties.Settings.Default["LaunchOnStartup"];
             ConsiderFullScreenCheckBox.Checked = (bool)Properties.Settings.Default["ConsiderFullScreen"];
             
+            // convert setting to bool
             var hideOnESC = (bool)Properties.Settings.Default["HideSearchWithEscape"];
-            if (hideOnESC)
-            {
-                HideWithEscRadioButton.Checked = true;
-                ClearWithEscapeRadioButton.Checked = false;
-            } else
-            {
-                HideWithEscRadioButton.Checked = false;
-                ClearWithEscapeRadioButton.Checked = true;
-            }
-            
+            HideWithEscRadioButton.Checked = hideOnESC;
+            ClearWithEscapeRadioButton.Checked = !hideOnESC;
             HideOnFocusLostCheckbox.Checked = (bool)Properties.Settings.Default["HideOnFocusLost"];
-            var converter = new KeysConverter();
+            
             
             var hotKey = (uint)Properties.Settings.Default["HotKey"];
             var modifiers = (uint)Properties.Settings.Default["Modifiers"];
             
+            // Some bit math to get modifier for display
             uint mod = (uint)modifiers & 0xFFFF;
             Keys hotKeyKey = (Keys)hotKey;
             
+            // use converter to print the character of the hotkey
+            var converter = new KeysConverter();
             HotKeyTextBox.Text = (KeyModifier)mod + " + " + converter.ConvertToString(hotKeyKey);
         }
 
         private void HotKeyTextBox_KeyDown(object sender, KeyEventArgs e)
         {
+            // extract pressed keys from event in various formats
             Keys modifierKeys = e.Modifiers;
             Keys pressedKey = e.KeyData ^ modifierKeys;
             keyModifier = (int)KeyModifier.None;
             hotKey = (uint)pressedKey.GetHashCode();
-
+            
+            // converter used for display
             var converter = new KeysConverter();
+
             var pressedHotKey = e.KeyCode;
+            
+            // ignore text if it is just the modifier key
             if (pressedKey == Keys.Menu || pressedKey == Keys.ControlKey || pressedKey == Keys.ShiftKey || pressedKey == Keys.LWin)
             {
                 e.SuppressKeyPress = true;
@@ -139,6 +151,8 @@ namespace WindowFinder
                 return;
             }
 
+            // the modifier is comprised of 4 bits which make up a combination of the different
+            // modifiers (e.g. ALT + DEL)
             if (e.Control)
             {
                 keyModifier += (int)KeyModifier.Control;
@@ -157,14 +171,21 @@ namespace WindowFinder
 
             HotKeyTextBox.Text = converter.ConvertToString(pressedHotKey);
 
+            // we set this to true so that Save knows to save it
+            // I chose to do it this way because the display hot key is not the same
+            // as what is saved in settings.
             _isHotKeyChanged = true;
 
+            // We do not want this key event to continue being proccessed
             e.SuppressKeyPress = true;
         }
 
         private void ChangeHotKeyButton_Click(object sender, EventArgs e)
         {
+            // Enable the hotkey text box
             HotKeyTextBox.Enabled = !HotKeyTextBox.Enabled;
+
+            // Put the cursor in the textbox so that the user can just start typing
             HotKeyTextBox.Focus();
         }
     }
