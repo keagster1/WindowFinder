@@ -38,7 +38,6 @@ Can be opened with `CTRL+O` (while Search has focus) or with `/options`
 
 ---
 ### TODO:
-- Bug: If you select a window that's docked, it has a decent chance of resizing the window.
 - MAKE OR GET BETTER ICON
 - Add ability to pin windows as favorites
     - Will add these to the top of the list everytime
