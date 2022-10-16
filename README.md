@@ -12,7 +12,7 @@ Effortlessly search for and show any open window on your computer!
  Options to customize your experience
 
 ### Installation
-1. Download from here (link coming)
+1. Download from [here]
 1. Open installer and follow on-screen steps.
 1. The first thing you should do after installation is change the settings to your liking.
 1. Thats it!
@@ -27,6 +27,8 @@ Effortlessly search for and show any open window on your computer!
 - Press Escape to hide the search window
 
 ### Options
+Can be opened with `CTRL+O` (while Search has focus) or with `/options`
+
 <img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="500" height="500" />
 
 ---
@@ -35,9 +37,6 @@ Effortlessly search for and show any open window on your computer!
 - Add ability to pin windows as favorites
     - Will add these to the top of the list everytime
     - Can be turned on/off
-- Refactor
-    - Break code into functions
-    - Remove unneeded code
-    - Fix warnings
-    - Add error handling
 - Dark mode
+
+[here]: https://github.com/keagster1/WindowFinder/releases/tag/v1.0.1-beta
