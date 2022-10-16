@@ -620,6 +620,7 @@ namespace WindowFinder
         }
 
         // Get the open windows from the system process list
+        // Credits to https://www.tcx.be/blog/2006/list-open-windows/
         public static IDictionary<HWND, string> GetOpenWindows()
         {
             HWND shellWindow = Search.GetShellWindow();
