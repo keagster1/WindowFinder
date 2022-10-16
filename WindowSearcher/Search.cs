@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using HWND = System.IntPtr;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace WindowFinder
 {
@@ -313,14 +314,17 @@ namespace WindowFinder
             // Custom scroll code to center selected item
             ScrollGrid();
         }
-
+        
         public static void FocusWindow(IntPtr hWnd)
         {
             // use the Handle of the window to go to
             // the window and forcibly show it.
             if (hWnd != IntPtr.Zero)
             {
-                ShowWindow(hWnd, 1);
+                // I had to experiment quite a bit with the CmdShow value
+                // See https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow for details
+                // SW_SHOW (5) seems to give the best behavior
+                ShowWindow(hWnd, 5);
                 SetForegroundWindow(hWnd);
             }
         }
