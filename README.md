@@ -31,6 +31,11 @@ Can be opened with `CTRL+O` (while Search has focus) or with `/options`
 
 <img src="gifs/Options.gif" data-canonical-src="gifs/Options.gif" width="500" height="500" />
 
+### Updating
+1. Uninstall current WindowFinder installation
+2. Download new version
+3. Run installer
+
 ---
 ### TODO:
 - MAKE OR GET BETTER ICON
