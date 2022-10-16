@@ -94,5 +94,17 @@ namespace WindowFinder.Properties {
                 this["Modifiers"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ClearSearchOnFocus {
+            get {
+                return ((bool)(this["ClearSearchOnFocus"]));
+            }
+            set {
+                this["ClearSearchOnFocus"] = value;
+            }
+        }
     }
 }

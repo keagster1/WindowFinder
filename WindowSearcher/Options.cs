@@ -97,6 +97,8 @@ namespace WindowFinder
                 }
             }
 
+            Properties.Settings.Default["ClearSearchOnFocus"] = ClearSearchOnFocusCheckbox.Checked;
+
             // Actually save the settings
             Properties.Settings.Default.Save();
             MessageBox.Show("Settings saved! Application will restart to apply changes.");
@@ -128,6 +130,8 @@ namespace WindowFinder
             // use converter to print the character of the hotkey
             var converter = new KeysConverter();
             HotKeyTextBox.Text = (KeyModifier)mod + " + " + converter.ConvertToString(hotKeyKey);
+
+            ClearSearchOnFocusCheckbox.Checked = Properties.Settings.Default["ClearSearchOnFocus"].ToString() == "True";
         }
 
         private void HotKeyTextBox_KeyDown(object sender, KeyEventArgs e)

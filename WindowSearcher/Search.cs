@@ -229,8 +229,16 @@ namespace WindowFinder
                             if (window.Value.Equals(WindowDataGridView.SelectedRows[0].Cells[1].Value))
                             {
                                 // set focus to window
-                                FocusWindow(window.Key);
-                                
+                                bool windowGotFocused = FocusWindow(window.Key);
+
+                                // Clear search box if setting is enabled
+                                bool shouldClearSearchOnFocus = (bool)Properties.Settings.Default["ClearSearchOnFocus"];
+                                if (windowGotFocused && shouldClearSearchOnFocus)
+                                {
+
+                                    SearchTextBox.Text = "";
+                                }
+
                                 // supress key event
                                 m.Result = (IntPtr)1;
                                 return true;
@@ -315,7 +323,7 @@ namespace WindowFinder
             ScrollGrid();
         }
         
-        public static void FocusWindow(IntPtr hWnd)
+        public static bool FocusWindow(IntPtr hWnd)
         {
             // use the Handle of the window to go to
             // the window and forcibly show it.
@@ -326,7 +334,9 @@ namespace WindowFinder
                 // SW_SHOW (5) seems to give the best behavior
                 ShowWindow(hWnd, 5);
                 SetForegroundWindow(hWnd);
+                return true;
             }
+            return false;
         }
 
         // Not sure if I really needed to implement so many key handlers but here we are...
@@ -617,7 +627,16 @@ namespace WindowFinder
                 if (window.Value == window_name)
                 {
                     // Finally focus the window
-                    FocusWindow(window.Key);
+                    // returns true if the process was valid
+                    bool windowGotFocused = FocusWindow(window.Key);
+                    
+                    // Clear search box if setting is enabled
+                    bool shouldClearSearchOnFocus = (bool)Properties.Settings.Default["ClearSearchOnFocus"];
+                    if (windowGotFocused && shouldClearSearchOnFocus)
+                    {
+
+                        SearchTextBox.Text = "";
+                    }
                     Hide();
                     return;
                 }

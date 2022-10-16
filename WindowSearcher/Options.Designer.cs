@@ -40,6 +40,7 @@
             this.ClearWithEscapeRadioButton = new System.Windows.Forms.RadioButton();
             this.HideWithEscRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.ClearSearchOnFocusCheckbox = new System.Windows.Forms.CheckBox();
             this.SaveButton = new System.Windows.Forms.Button();
             this.TipTextLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
@@ -153,18 +154,29 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.ClearSearchOnFocusCheckbox);
             this.groupBox3.Controls.Add(this.HideOnFocusLostCheckbox);
             this.groupBox3.Controls.Add(this.ConsiderFullScreenCheckBox);
             this.groupBox3.Location = new System.Drawing.Point(12, 233);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(437, 118);
+            this.groupBox3.Size = new System.Drawing.Size(437, 142);
             this.groupBox3.TabIndex = 9;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
             // 
+            // ClearSearchOnFocusCheckbox
+            // 
+            this.ClearSearchOnFocusCheckbox.AutoSize = true;
+            this.ClearSearchOnFocusCheckbox.Location = new System.Drawing.Point(22, 92);
+            this.ClearSearchOnFocusCheckbox.Name = "ClearSearchOnFocusCheckbox";
+            this.ClearSearchOnFocusCheckbox.Size = new System.Drawing.Size(366, 24);
+            this.ClearSearchOnFocusCheckbox.TabIndex = 6;
+            this.ClearSearchOnFocusCheckbox.Text = "Clear Search box when selected window is focused";
+            this.ClearSearchOnFocusCheckbox.UseVisualStyleBackColor = true;
+            // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(314, 436);
+            this.SaveButton.Location = new System.Drawing.Point(314, 465);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(135, 29);
             this.SaveButton.TabIndex = 10;
@@ -175,7 +187,7 @@
             // TipTextLabel
             // 
             this.TipTextLabel.AutoSize = true;
-            this.TipTextLabel.Location = new System.Drawing.Point(12, 354);
+            this.TipTextLabel.Location = new System.Drawing.Point(12, 378);
             this.TipTextLabel.Name = "TipTextLabel";
             this.TipTextLabel.Size = new System.Drawing.Size(307, 40);
             this.TipTextLabel.TabIndex = 12;
@@ -185,13 +197,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(478, 482);
+            this.ClientSize = new System.Drawing.Size(478, 513);
             this.Controls.Add(this.TipTextLabel);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "Options";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WindowFinder Options";
@@ -222,5 +236,6 @@
         private Label TipTextLabel;
         private RadioButton ClearWithEscapeRadioButton;
         private RadioButton HideWithEscRadioButton;
+        private CheckBox ClearSearchOnFocusCheckbox;
     }
 }
