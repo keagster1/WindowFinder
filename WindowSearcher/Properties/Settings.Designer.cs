@@ -106,5 +106,53 @@ namespace WindowFinder.Properties {
                 this["ClearSearchOnFocus"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsFirstTime {
+            get {
+                return ((bool)(this["IsFirstTime"]));
+            }
+            set {
+                this["IsFirstTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int PositionLCR {
+            get {
+                return ((int)(this["PositionLCR"]));
+            }
+            set {
+                this["PositionLCR"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int Padding {
+            get {
+                return ((int)(this["Padding"]));
+            }
+            set {
+                this["Padding"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PositionTCB {
+            get {
+                return ((int)(this["PositionTCB"]));
+            }
+            set {
+                this["PositionTCB"] = value;
+            }
+        }
     }
 }

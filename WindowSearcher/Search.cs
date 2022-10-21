@@ -60,13 +60,13 @@ namespace WindowFinder
 
         [DllImport("user32.dll", EntryPoint = "GetClassLongPtr")]
         static extern IntPtr GetClassLong64(IntPtr hWnd, int nIndex);
-        
+
         public delegate bool EnumWindowsProc(HWND hWnd, int lParam);
-        
+
         [DllImport("USER32.DLL")]
         private static extern bool EnumWindows(EnumWindowsProc enumFunc, int lParam);
 
-        [DllImport("USER32.DLL",CharSet = CharSet.Unicode)]
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
         private static extern int GetWindowText(HWND hWnd, StringBuilder lpString, int nMaxCount);
 
         [DllImport("USER32.DLL")]
@@ -83,11 +83,11 @@ namespace WindowFinder
         private static extern IntPtr GetDesktopWindow();
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowRect(IntPtr hwnd, out RECT rc);
-        
+
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         static extern int GetClassName(int hWnd, StringBuilder lpClassName, int nMaxCount);
         // !-- END OF IMPORTS FINALLY --! //
-        
+
         public Search()
         {
             InitializeComponent();
@@ -133,13 +133,62 @@ namespace WindowFinder
             {
                 AddWindowToDataGrid(window);
             }
-            
+
             // added this to fix issue where DataGrid selected the first item by default
             WindowDataGridView.CurrentCell.Selected = false;
 
             // change the size of the grid to fit the number of rows and 
             // change the form size to only show the textbox and grid
             ResizeListAndForm();
+
+            // if LCR setting is -1, move the form to the left side of the screen
+            int LCR = (int)Properties.Settings.Default["PositionLCR"];
+            int padding = (int)Properties.Settings.Default["Padding"];
+            if (LCR == -1)
+            {
+                this.Left = padding;
+            }
+            else if (LCR == 1)
+            {
+                this.Left = Screen.PrimaryScreen.Bounds.Width - this.Width - padding;
+            }
+            else
+            {
+                this.Left = (Screen.PrimaryScreen.Bounds.Width / 2) - (this.Width / 2);
+            }
+
+            int TCB = (int)Properties.Settings.Default["PositionTCB"];
+            if (TCB == -1)
+            {
+                this.Top = padding;
+            }
+            else if (TCB == 1)
+            {
+                this.Top = Screen.PrimaryScreen.Bounds.Height - this.Height - padding;
+            }
+            else
+            {
+                this.Top = (Screen.PrimaryScreen.Bounds.Height / 2) - (this.Height / 2);
+            }
+
+
+            if ((bool)Properties.Settings.Default["IsFirstTime"])
+            {
+                Properties.Settings.Default["IsFirstTime"] = false;
+                Properties.Settings.Default.Save();
+
+                // Show message box with instructions on how to use the tool
+                ShowWelcomeMessage();
+            }
+        }
+
+        public void ShowWelcomeMessage()
+        {
+            MessageBox.Show("Welcome and thanks for downloading WindowFinder!\n\n" +
+                    "To use this tool, simply press the hotkey you set (Alt + F1 by default) and start typing the name of the window you want to find.\n\n" +
+                    "You can also use the arrow keys to navigate the list of windows and press enter to select the window you want to focus.\n\n" +
+                    "You can change the hotkey in the options.\n\n" +
+                    "You can open the options menu with (CTRL+O) while the Search window is open. Or you can type /options in the search box and press enter.", "Welcome to WindowFinder", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void AddWindowToDataGrid(KeyValuePair<IntPtr, string> w)
@@ -185,7 +234,7 @@ namespace WindowFinder
 
                             // resize listbox to fit 10 items
                             ResizeListAndForm();
-                            
+
                             // suppress the key event
                             m.Result = (IntPtr)1;
                             return base.ProcessKeyPreview(ref m);
@@ -193,19 +242,30 @@ namespace WindowFinder
                     case Keys.Enter:
                         // Check for commands
                         // TODO: Make commands show up in results list
-                        if (SearchTextBox.Text.Trim().StartsWith("/"))
+                        var text = SearchTextBox.Text.Trim();
+                        if (text.StartsWith("/"))
                         {
-                            if (SearchTextBox.Text.Trim().Equals("/options"))
+                            if (text.Equals("/options"))
                             {
                                 SearchTextBox.Text = "";
                                 Options o = new();
                                 o.ShowDialog();
                             }
-                            else if (SearchTextBox.Text.Trim().Equals("/exit"))
+                            else if (text.Equals("/exit"))
                             {
                                 SearchTextBox.Text = "";
                                 HandleExit();
                                 break;
+                            } 
+                            else if(text.Equals("/q"))
+                            {
+                                SearchTextBox.Text = "";
+                                HandleExit();
+                                break;
+                            }
+                            else if (text.Equals("/welcome"))
+                            {
+                                ShowWelcomeMessage();
                             }
                             else
                             {
@@ -265,7 +325,7 @@ namespace WindowFinder
 
             }
         }
-        
+
         public bool hasChangedSelection = false;
 
         public void MoveViewSelectedIndexDataGrid(bool is_going_up)
@@ -322,7 +382,7 @@ namespace WindowFinder
             // Custom scroll code to center selected item
             ScrollGrid();
         }
-        
+
         public static bool FocusWindow(IntPtr hWnd)
         {
             // use the Handle of the window to go to
@@ -369,11 +429,11 @@ namespace WindowFinder
         private void ResetDataGridView()
         {
             Dictionary<IntPtr, string> windows = (Dictionary<HWND, string>)GetOpenWindows();
-            
+
             // clear selection if possible
             if (WindowDataGridView.CurrentCell != null)
                 WindowDataGridView.CurrentCell.Selected = false;
-            
+
             // loop over all windows
             WindowDataGridView.Rows.Clear();
 
@@ -629,7 +689,7 @@ namespace WindowFinder
                     // Finally focus the window
                     // returns true if the process was valid
                     bool windowGotFocused = FocusWindow(window.Key);
-                    
+
                     // Clear search box if setting is enabled
                     bool shouldClearSearchOnFocus = (bool)Properties.Settings.Default["ClearSearchOnFocus"];
                     if (windowGotFocused && shouldClearSearchOnFocus)
