@@ -44,4 +44,4 @@ Can be opened with `CTRL+O` (while Search has focus) or with `/options`
     - Can be turned on/off
 - Dark mode
 
-[here]: https://github.com/keagster1/WindowFinder/releases/tag/v1.0.1-beta
+[here]: https://github.com/keagster1/WindowFinder/releases
