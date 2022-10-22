@@ -109,7 +109,7 @@ namespace WindowFinder
 
         private void Options_Load(object sender, EventArgs e)
         {
-            // Set state of options to current settings
+            //// Set state of options to current settings
             LaunchOnStartupCheckbox.Checked = (bool)Properties.Settings.Default["LaunchOnStartup"];
             ConsiderFullScreenCheckBox.Checked = (bool)Properties.Settings.Default["ConsiderFullScreen"];
 
